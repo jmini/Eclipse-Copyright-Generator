@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.wdev91.eclipse.copyright.feature"
+      label="%featureName"
+      version="1.0.1"
+      provider-name="%providerName">
+
+   <description>
+      With this plug-in, the developper can apply a copyright header comment to a selection of resources files in projects. The same text can be applyied on different types of files (java, xml...), the comment format being adapted in function of the content type.
+   </description>
+
+   <copyright>
+      Copyright (c) 2008 Eric Wuillai.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      This plug-in is provided under the Eclipse Public License
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://www.wdev91.com/update/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+   </requires>
+
+   <plugin
+         id="com.wdev91.eclipse.copyright"
+         download-size="87"
+         install-size="87"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
