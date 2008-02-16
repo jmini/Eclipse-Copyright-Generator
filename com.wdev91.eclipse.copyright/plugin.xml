@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="%actionset_descr"
+            id="com.wdev91.eclipse.copyright.actionSet"
+            label="%actionset_label"
+            visible="true">
+         <action
+               class="com.wdev91.eclipse.copyright.actions.ApplyCopyrightAction"
+               icon="icons/copyright.gif"
+               id="com.wdev91.eclipse.copyright.ApplyCopyrightAction"
+               label="%actionApply_label"
+               menubarPath="project/additions"
+               tooltip="%actionApply_tooltip">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="com.wdev91.eclipse.copyright.preferences.CopyrightPreferencePage"
+            id="com.wdev91.eclipse.copyright.copyrightPreferencePage"
+            name="%prefsCopyright_label">
+      </page>
+      <page
+            category="com.wdev91.eclipse.copyright.copyrightPreferencePage"
+            class="com.wdev91.eclipse.copyright.preferences.HeadersPreferencePage"
+            id="com.wdev91.eclipse.copyright.headerPreferencePage"
+            name="%prefsHeader_label">
+      </page>
+   </extension>
+
+</plugin>
