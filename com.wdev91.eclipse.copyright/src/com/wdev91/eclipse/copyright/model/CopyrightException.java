@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.model;
 
+/**
+ * Exceptions thrown by the copyright operations.
+ */
 public class CopyrightException extends Exception {
   private static final long serialVersionUID = -6823695001180785001L;
 

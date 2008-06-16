@@ -25,6 +25,7 @@ public class HeaderFormat {
   protected String beginLine;
   protected String endLine;
   protected String linePrefix = ""; //$NON-NLS-1$
+  protected int postBlankLines = 0;
   protected boolean preserveFirstLine = false;
 
   static {
@@ -33,21 +34,21 @@ public class HeaderFormat {
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
         "# ", //$NON-NLS-1$
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
-        true, false);
+        0, true, false);
 
     JAVA_HEADER = new HeaderFormat(
         CT_JAVA,
         "/*******************************************************************************", //$NON-NLS-1$
         " * ", //$NON-NLS-1$
         " ******************************************************************************/", //$NON-NLS-1$
-        false, false);
+        0, false, false);
 
     XML_HEADER = new HeaderFormat(
         CT_XML,
         "<!------------------------------------------------------------------------------", //$NON-NLS-1$
         "  ", //$NON-NLS-1$
         "------------------------------------------------------------------------------->", //$NON-NLS-1$
-        false, false);
+        0, false, false);
   }
 
   public HeaderFormat(String contentId) {
@@ -55,18 +56,21 @@ public class HeaderFormat {
   }
 
   private HeaderFormat(String contentId, String beginLine, String linePrefix,
-      String endLine, boolean lineCommentFormat, boolean preserveFirstLine) {
+      String endLine, int postBlankLines, boolean lineCommentFormat,
+      boolean preserveFirstLine) {
     this.contentId = contentId;
     this.beginLine = beginLine;
     this.linePrefix = linePrefix;
     this.endLine = endLine;
+    this.postBlankLines = postBlankLines;
     this.lineCommentFormat = lineCommentFormat;
     this.preserveFirstLine = preserveFirstLine;
   }
 
   @Override
   protected Object clone() {
-    return new HeaderFormat(this.contentId, this.beginLine, this.linePrefix, this.endLine,
+    return new HeaderFormat(this.contentId, this.beginLine, this.linePrefix,
+                            this.endLine, this.postBlankLines,
                             this.lineCommentFormat, this.preserveFirstLine);
   }
 
@@ -90,6 +94,10 @@ public class HeaderFormat {
     return linePrefix;
   }
 
+  public int getPostBlankLines() {
+    return postBlankLines;
+  }
+
   public boolean isPreserveFirstLine() {
     return preserveFirstLine;
   }
@@ -108,6 +116,10 @@ public class HeaderFormat {
 
   public void setLinePrefix(String linePrefix) {
     this.linePrefix = linePrefix;
+  }
+
+  public void setPostBlankLines(int postBlankLines) {
+    this.postBlankLines = postBlankLines;
   }
 
   public void setPreserveFirstLine(boolean preserveFirstLine) {

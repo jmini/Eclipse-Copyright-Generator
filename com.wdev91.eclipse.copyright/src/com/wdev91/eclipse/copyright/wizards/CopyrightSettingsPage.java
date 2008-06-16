@@ -169,7 +169,6 @@ public class CopyrightSettingsPage extends WizardPage {
 
       public void widgetSelected(SelectionEvent e) {
         settings.setForceApply(forceApply.getSelection());
-        settings.setChanged(true);
       }
     });
     addLicenseFile.addSelectionListener(new SelectionListener() {

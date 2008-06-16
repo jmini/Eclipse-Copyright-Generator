@@ -36,12 +36,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -53,6 +58,9 @@ import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Constants;
 import com.wdev91.eclipse.copyright.Messages;
 
+/**
+ * Central class managing all operations around the copyrights.
+ */
 public class CopyrightManager {
   public static final Copyright CUSTOM;
 
@@ -69,14 +77,40 @@ public class CopyrightManager {
   private static final String TAG_BEGIN = "beginLine"; //$NON-NLS-1$
   private static final String TAG_PREFIX = "linePrefix"; //$NON-NLS-1$
   private static final String TAG_END = "endLine"; //$NON-NLS-1$
+  private static final String ATT_POSTBLANKLINES = "postBlankLines"; //$NON-NLS-1$
   private static final String ATT_LINEFORMAT = "lineFormat"; //$NON-NLS-1$
   private static final String ATT_PRESERVEFIRST = "preserveFirstLine"; //$NON-NLS-1$
 
+  /** The repository root directory */
   private static File repository;
   private static File headersFile;
+  /** Eclipse content types manager */
   private static IContentTypeManager contentTypeManager;
+  /** The default text content type */
   private static IContentType textContentType;
+  /** Cache of the headers formats */
   private static Map<String, HeaderFormat> headerFormats = null;
+
+  /**
+   * Class of job used to apply copyright on given settings.
+   */
+  static class CopyrightJob extends WorkspaceJob {
+    CopyrightSettings settings;
+
+    public CopyrightJob(CopyrightSettings settings) {
+      super(Messages.CopyrightManager_jobName);
+      this.settings = settings;
+    }
+
+    @Override
+    public IStatus runInWorkspace(IProgressMonitor monitor) {
+      try {
+        return applyCopyright(settings, monitor);
+      } catch (CopyrightException e) {
+        return new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
+      }
+    }
+  }
 
   static {
     CUSTOM = new Copyright(Messages.CopyrightManager_customLabel);
@@ -89,51 +123,94 @@ public class CopyrightManager {
     textContentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
   }
 
-  public static void applyCopyright(CopyrightSettings settings) throws CopyrightException {
-    Map<String, String> parameters = new HashMap<String, String>();
-    parameters.put(Constants.P_YEAR, Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-    parameters.put(Constants.P_USER, System.getProperty("user.name")); //$NON-NLS-1$
-    parameters.put(Constants.P_OWNER,
-                   Activator.getDefault()
-                            .getPreferenceStore()
-                            .getString(Constants.PREFERENCES_OWNER));
-
-    // Apply the header comment on the selected files
-    for (IFile file : settings.getFiles()) {
-      parameters.put(Constants.P_FILE_NAME, file.getName());
-      parameters.put(Constants.P_FILE_ABSPATH, file.getLocation().toString());
-      parameters.put(Constants.P_FILE_PATH, file.getProjectRelativePath().toString());
-      parameters.put(Constants.P_PROJECT_NAME, file.getProject().getName());
-      applyCopyright(file, settings.getCopyright(), parameters);
-    }
-
-    // Creates the license files in the selected projects
-    try {
-      String filename = settings.getLicenseFile();
-      if ( filename != null ) {
-        for (IProject project : settings.getProjects()) {
-          IPath path = project.getLocation();
-          if ( path == null ) continue;
-          File licenseFile = new File(path.toFile(), filename);
-          if ( ! licenseFile.exists() ) {
-            writeLicense(licenseFile, settings.getCopyright());
-          }
-        }
-      }
-    } catch (Exception e) {
-      throw new CopyrightException(Messages.CopyrightManager_err_licenseCreate, e);
-    }
-
-    // Refreshes the workspace
-    try {
-      ResourcesPlugin.getWorkspace()
-                     .getRoot()
-                     .refreshLocal(IResource.DEPTH_INFINITE, null);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
+  /**
+   * Creates a job to apply copyright based on the given settings.
+   * 
+   * @param settings settings defining the copyright to apply
+   */
+  public static void applyCopyrightJob(CopyrightSettings settings) {
+    Job job = new CopyrightJob(settings);
+    job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+    job.schedule();
   }
 
+  /**
+   * apply copyright based on the given settings, reporting operations to
+   * the given monitor.
+   * 
+   * @param settings settings defining the copyright to apply
+   * @param monitor monitor for reporting operations
+   * @return Status of the execution
+   * @throws CopyrightException
+   */
+  public static IStatus applyCopyright(final CopyrightSettings settings, IProgressMonitor monitor) throws CopyrightException {
+    IStatus retval = Status.OK_STATUS;
+
+    monitor.beginTask(Messages.CopyrightManager_taskName, settings.getFiles().length);
+    try {
+      Map<String, String> parameters = new HashMap<String, String>();
+      parameters.put(Constants.P_YEAR, Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+      parameters.put(Constants.P_USER, System.getProperty("user.name")); //$NON-NLS-1$
+      parameters.put(Constants.P_OWNER,
+                     Activator.getDefault()
+                              .getPreferenceStore()
+                              .getString(Constants.PREFERENCES_OWNER));
+
+      // Creates the license files in the selected projects
+      String filename = settings.getLicenseFile();
+      if ( filename != null ) {
+        try {
+          for (IProject project : settings.getProjects()) {
+            IPath path = project.getLocation();
+            if ( path == null ) continue;
+            File licenseFile = new File(path.toFile(), filename);
+            if ( ! licenseFile.exists() ) {
+              writeLicense(licenseFile, settings.getCopyright());
+            }
+          }
+        } catch (IOException e) {
+          throw new CopyrightException(e.getMessage(), e);
+        }
+      }
+
+      // Apply the header comment on the selected files
+      for (IFile file : settings.getFiles()) {
+        parameters.put(Constants.P_FILE_NAME, file.getName());
+        parameters.put(Constants.P_FILE_ABSPATH, file.getLocation().toString());
+        parameters.put(Constants.P_FILE_PATH, file.getProjectRelativePath().toString());
+        parameters.put(Constants.P_PROJECT_NAME, file.getProject().getName());
+        applyCopyright(file, settings.getCopyright(), parameters);
+        if ( monitor.isCanceled() ) {
+          retval = Status.CANCEL_STATUS;
+          break;
+        }
+        monitor.worked(1);
+      }
+
+      // Refreshes the workspace
+      try {
+        ResourcesPlugin.getWorkspace()
+                       .getRoot()
+                       .refreshLocal(IResource.DEPTH_INFINITE, null);
+      } catch (CoreException e) {
+        throw new CopyrightException(e.getMessage(), e);
+      }
+    } finally {
+      monitor.done();
+    }
+
+    return retval;
+  }
+
+  /**
+   * Apply a copyright on the given file. The variables present in the header
+   * text are replaced by the given parameters.
+   * 
+   * @param file
+   * @param copyright
+   * @param parameters
+   * @throws CopyrightException
+   */
   private static void applyCopyright(IFile file, Copyright copyright,
         Map<String, String> parameters) throws CopyrightException {
     File f = file.getLocation().toFile();
@@ -142,6 +219,7 @@ public class CopyrightManager {
     PrintWriter writer = null;
     FileWriter fw = null;
     String line;
+    boolean firstInstructionFinded = false;
 
     try {
       // Gets the header format for the file's content type
@@ -169,34 +247,52 @@ public class CopyrightManager {
       }
       writer.println(format.endLine);
 
+      // Add the optionnal blank lines
+      int bl = format.getPostBlankLines();
+      for (int i = 0; i < bl; i++) {
+        writer.println(Constants.EMPTY_STRING);
+      }
+
       // Writes the file content, except an optionnaly existing header
       int headerStatus = 0;
       while ( (line = reader.readLine()) != null ) {
         switch ( headerStatus ) {
           case 0 :
-//            if ( line.startsWith(format.beginLine.substring(0, Math.min(format.beginLine.length(), 5))) ) {
-            if ( line.trim().length() > 0
-                 && format.beginLine.startsWith(line.substring(0, Math.min(line.length(), 5)).trim()) ) {
-              headerStatus = 1;
+            if ( line.trim().length() > 0 ) {
+              if ( line.startsWith(format.beginLine.substring(0, Math.min(format.beginLine.length(), 10))) ) {
+                headerStatus = 1;
+                break;
+              } else {
+                headerStatus = 2;
+                firstInstructionFinded = true;
+              }
             } else {
-              writer.println(line);
-              headerStatus = 2;
+              if ( ! firstInstructionFinded ) {
+                break;
+              }
             }
+            writer.println(line);
+
             break;
           case 1 :
             if ( format.lineCommentFormat ) {
-//              if ( line.startsWith(format.endLine.substring(0, Math.min(format.beginLine.length(), 5))) ) {
-              if ( line.trim().length() > 0
-                   && format.endLine.startsWith(line.substring(0, Math.min(line.length(), 5)).trim()) ) {
+              if ( line.startsWith(format.endLine.substring(0, Math.min(format.endLine.length(), 10)))
+                   || ! line.startsWith(format.linePrefix) ) {
                 headerStatus = 2;
               }
-//            } else if ( line.endsWith(format.endLine.substring(format.endLine.length() - 5)) ) {
             } else if ( line.trim().length() > 0
                         && format.endLine.endsWith(line.substring(Math.max(line.length() - 5, 0)).trim()) ) {
               headerStatus = 2;
             }
             break;
           case 2 :
+            if ( ! firstInstructionFinded ) {
+              if ( line.trim().length() == 0 ) {
+                break;
+              } else {
+                firstInstructionFinded = true;
+              }
+            }
             writer.println(line);
             break;
         }
@@ -221,6 +317,11 @@ public class CopyrightManager {
     }
   }
 
+  /**
+   * Returns all the headers formats definitions.
+   * 
+   * @return Map of headers formats
+   */
   public static Map<String, HeaderFormat> getAllHeadersFormats() {
     if ( headerFormats == null ) {
       loadHeadersFormats();
@@ -232,13 +333,30 @@ public class CopyrightManager {
     return formats;
   }
 
-  public static IContentType getContentType(IFile file) throws CoreException {
-    IContentDescription description = file.getContentDescription();
-    return description != null
-                          ? description.getContentType()
-                          : contentTypeManager.findContentTypeFor(file.getName());
+  /**
+   * Returns the Eclipse content type for the given file.
+   * 
+   * @param file
+   * @return
+   */
+  public static IContentType getContentType(IFile file) {
+    try {
+      IContentDescription description = file.getContentDescription();
+      return description != null
+             ? description.getContentType()
+             : contentTypeManager.findContentTypeFor(file.getName());
+    } catch (CoreException e) {
+      return null;
+    }
   }
 
+  /**
+   * Returns the file containing the headers definitions. This file is
+   * located in the workspace in the state directory of the plugin.
+   * 
+   * @return
+   * @throws IOException
+   */
   private static File getHeaderFile() throws IOException {
     if ( headersFile == null ) {
       headersFile = Activator.getDefault()
@@ -249,6 +367,12 @@ public class CopyrightManager {
     return headersFile;
   }
 
+  /**
+   * Returns the header format for the given Eclipse content type.
+   * 
+   * @param contentType
+   * @return
+   */
   public static HeaderFormat getHeaderFormat(IContentType contentType) {
     if ( headerFormats == null ) {
       loadHeadersFormats();
@@ -292,6 +416,11 @@ public class CopyrightManager {
   private static boolean isValidFile(IFile file, StringMatcher[] matchers, boolean forceApply) throws CopyrightException {
     BufferedReader reader = null;
     try {
+      // Checks if file is writable
+      if ( file.isPhantom() || file.isReadOnly() ) {
+        return false;
+      }
+
       // Gets the content type of the file
       IContentType ct = getContentType(file);
       if ( ct == null || ! ct.isKindOf(textContentType) ) {
@@ -325,7 +454,9 @@ public class CopyrightManager {
           return false;  // The file already contains a header
         }
       }
-    } catch (Exception e) {
+    } catch (CoreException e) {
+      return false;
+    } catch (IOException e) {
       throw new CopyrightException(NLS.bind(Messages.CopyrightManager_err_validation, file.getName()), e);
     } finally {
       if ( reader != null ) {
@@ -403,6 +534,8 @@ public class CopyrightManager {
         for (int i = 0; i < nodes.getLength(); i++) {
           elt = (Element) nodes.item(i);
           HeaderFormat format = new HeaderFormat(elt.getAttribute(ATT_CONTENTID));
+          String pbl = elt.getAttribute(ATT_POSTBLANKLINES);
+          format.setPostBlankLines(Constants.EMPTY_STRING.equals(pbl) ? 0 : Integer.parseInt(pbl));
           format.setLineCommentFormat(Boolean.parseBoolean(elt.getAttribute(ATT_LINEFORMAT)));
           format.setPreserveFirstLine(Boolean.parseBoolean(elt.getAttribute(ATT_PRESERVEFIRST)));
           Node n = elt.getElementsByTagName(TAG_BEGIN).item(0).getFirstChild();
@@ -460,6 +593,7 @@ public class CopyrightManager {
       for (HeaderFormat format : formats.values()) {
         writer.println("\t<" + TAG_HEADER
                        + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+                       + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
                        + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
                        + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
         writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine() + "]]></" + TAG_BEGIN + '>');

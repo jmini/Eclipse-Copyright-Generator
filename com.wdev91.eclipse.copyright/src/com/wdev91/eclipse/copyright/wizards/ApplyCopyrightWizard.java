@@ -11,12 +11,16 @@
 package com.wdev91.eclipse.copyright.wizards;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangingEvent;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightException;
@@ -47,7 +51,7 @@ public class ApplyCopyrightWizard extends Wizard {
     IPageChangingListener listener = new IPageChangingListener() {
       public void handlePageChanging(PageChangingEvent event) {
         if ( event.getTargetPage() == selectionPage && settings.isChanged() ) {
-          computeSelection();
+          computeSelectionWithProgress();
         }
       }
     };
@@ -62,7 +66,25 @@ public class ApplyCopyrightWizard extends Wizard {
       selectionPage.setSelection(CopyrightManager.selectResources(settings));
       settings.setChanged(false);
     } catch (CopyrightException e) {
-      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error, e.getMessage());
+      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error,
+                              e.getMessage());
+    }
+  }
+
+  private void computeSelectionWithProgress() {
+    IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+    try {
+      progressService.runInUI(progressService,
+          new IRunnableWithProgress() {
+            public void run(IProgressMonitor monitor) {
+              monitor.beginTask(Messages.ApplyCopyrightWizard_selectionTaskMessage,
+                                IProgressMonitor.UNKNOWN);
+              computeSelection();
+              monitor.done();
+            }
+          },
+          null);
+    } catch (Exception e) {
     }
   }
 
@@ -81,13 +103,7 @@ public class ApplyCopyrightWizard extends Wizard {
   @Override
   public boolean performFinish() {
     selectionPage.getSelection(settings);
-    try {
-      CopyrightManager.applyCopyright(settings);
-    } catch (CopyrightException e) {
-      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error,
-                              e.getMessage() + " - " + e.getCause().getMessage()); //$NON-NLS-1$
-      return false;
-    }
+    CopyrightManager.applyCopyrightJob(settings);
     return true;
   }
 }

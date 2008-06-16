@@ -55,6 +55,7 @@ public class HeadersPreferencePage extends PreferencePage implements
   private Text firstLineText;
   private Text linePrefixText;
   private Text lastLineText;
+  private Text postBlankLinesText;
   private Button lineFormatButton;
   private Button preserveFirstLineButton;
 
@@ -75,6 +76,7 @@ public class HeadersPreferencePage extends PreferencePage implements
         firstLineText.setText(format.getBeginLine());
         linePrefixText.setText(format.getLinePrefix());
         lastLineText.setText(format.getEndLine());
+        postBlankLinesText.setText(Constants.EMPTY_STRING + format.getPostBlankLines());
         lineFormatButton.setSelection(format.isLineCommentFormat());
         preserveFirstLineButton.setSelection(format.isPreserveFirstLine());
       } else {
@@ -87,6 +89,7 @@ public class HeadersPreferencePage extends PreferencePage implements
     firstLineText.setText(Constants.EMPTY_STRING);
     linePrefixText.setText(Constants.EMPTY_STRING);
     lastLineText.setText(Constants.EMPTY_STRING);
+    postBlankLinesText.setText("0"); //$NON-NLS-1$
     lineFormatButton.setSelection(false);
     preserveFirstLineButton.setSelection(false);
   }
@@ -97,7 +100,7 @@ public class HeadersPreferencePage extends PreferencePage implements
     FontData[] fontData = font.getFontData();
 
     Composite top = new Composite(parent, SWT.NONE);
-    GridLayout layout = new GridLayout(3, false);
+    GridLayout layout = new GridLayout(4, false);
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     top.setLayout(layout);
@@ -115,13 +118,15 @@ public class HeadersPreferencePage extends PreferencePage implements
     contentTypesViewer.setComparator(new ViewerComparator());
     contentTypesViewer.setInput(Platform.getContentTypeManager());
     GridData data = new GridData(GridData.FILL_HORIZONTAL);
-    data.horizontalSpan = 3;
+    data.horizontalSpan = 4;
     data.heightHint = (fontData.length > 0 ? fontData[0].getHeight() : 10) * TREE_LINES_NUMBER;
     contentTypesViewer.getControl().setLayoutData(data);
 
     new Label(top, SWT.NONE).setText(Messages.HeadersPreferencePage_labelFirstLine);
     firstLineText = new Text(top, SWT.BORDER);
-    firstLineText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    data.horizontalSpan = 2;
+    firstLineText.setLayoutData(data);
     final Label length1 = new Label(top, SWT.NONE);
     length1.setText(LENGTH_LABEL_PREFIX);
     data = new GridData();
@@ -130,6 +135,10 @@ public class HeadersPreferencePage extends PreferencePage implements
 
     new Label(top, SWT.NONE).setText(Messages.HeadersPreferencePage_labelLinePrefix);
     linePrefixText = new Text(top, SWT.BORDER);
+    data = new GridData();
+    data.horizontalSpan = 2;
+    data.widthHint = 50;
+    linePrefixText.setLayoutData(data);
     final Label length2 = new Label(top, SWT.NONE);
     length2.setText(LENGTH_LABEL_PREFIX);
     data = new GridData();
@@ -138,29 +147,42 @@ public class HeadersPreferencePage extends PreferencePage implements
 
     new Label(top, SWT.NONE).setText(Messages.HeadersPreferencePage_labelLastLine);
     lastLineText = new Text(top, SWT.BORDER);
-    lastLineText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    data.horizontalSpan = 2;
+    lastLineText.setLayoutData(data);
     final Label length3 = new Label(top, SWT.NONE);
     length3.setText(LENGTH_LABEL_PREFIX);
     data = new GridData();
     data.widthHint = 30;
     length3.setLayoutData(data);
 
+    Label bll = new Label(top, SWT.NONE);
+    bll.setText("Blank lines after the header:");
+    data = new GridData();
+    data.horizontalSpan = 2;
+    bll.setLayoutData(data);
+    postBlankLinesText = new Text(top, SWT.BORDER);
+    data = new GridData();
+    data.horizontalSpan = 2;
+    data.widthHint = 20;
+    postBlankLinesText.setLayoutData(data);
+
     lineFormatButton = new Button(top, SWT.CHECK);
     lineFormatButton.setText(Messages.HeadersPreferencePage_checkLineFormat);
     data = new GridData(GridData.FILL_HORIZONTAL);
-    data.horizontalSpan = 3;
+    data.horizontalSpan = 4;
     lineFormatButton.setLayoutData(data);
 
     preserveFirstLineButton = new Button(top, SWT.CHECK);
     preserveFirstLineButton.setText(Messages.HeadersPreferencePage_checkPreserveFirstLine);
     data = new GridData(GridData.FILL_HORIZONTAL);
-    data.horizontalSpan = 3;
+    data.horizontalSpan = 4;
     preserveFirstLineButton.setLayoutData(data);
 
     Button clearButton = new Button(top, SWT.PUSH);
     clearButton.setText(Messages.HeadersPreferencePage_buttonClear);
     data = new GridData(GridData.FILL_HORIZONTAL);
-    data.horizontalSpan = 3;
+    data.horizontalSpan = 4;
     data.horizontalAlignment = GridData.END;
     data.widthHint = Math.max(convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH),
                               clearButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
@@ -226,6 +248,7 @@ public class HeadersPreferencePage extends PreferencePage implements
     String fl = firstLineText.getText();
     String lp = linePrefixText.getText();
     String ll = lastLineText.getText();
+    String bl = postBlankLinesText.getText().trim();
     boolean lf = lineFormatButton.getSelection();
     boolean pf = preserveFirstLineButton.getSelection();
     if ( fl.trim().length() + lp.trim().length() + ll.trim().length() == 0 && ! lf && ! pf ) {
@@ -239,6 +262,7 @@ public class HeadersPreferencePage extends PreferencePage implements
       format.setBeginLine(fl);
       format.setLinePrefix(lp);
       format.setEndLine(ll);
+      format.setPostBlankLines(bl.length() > 0 ? Math.abs(Integer.parseInt(bl)) : 0);
       format.setLineCommentFormat(lf);
       format.setPreserveFirstLine(pf);
     }

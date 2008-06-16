@@ -10,12 +10,22 @@
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.model;
 
+/**
+ * Copyright definition.
+ */
 public class Copyright {
+  /** Name of the copyright */
   protected String label;
+  /** Text to insert as header of files */
   protected String headerText;
+  /** File name of the license file */
   protected String licenseFilename;
+  /** Text content of the license file */
   protected String licenseText;
 
+  /**
+   * Constructor. Creates a copyright with the given label.
+   */
   public Copyright(String label) {
     this.label = label;
   }

@@ -67,6 +67,7 @@ public class CopyrightSettings {
 
   public void setForceApply(boolean forceApply) {
     this.forceApply = forceApply;
+    this.changed  = true;
   }
 
   public void setLicenseFile(String licenseFile) {
@@ -75,6 +76,7 @@ public class CopyrightSettings {
 
   public void setPattern(String pattern) {
     this.pattern = pattern;
+    this.changed  = true;
   }
 
   public void setProjects(IProject[] projects) {

@@ -15,12 +15,15 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
   private static final String BUNDLE_NAME = "com.wdev91.eclipse.copyright.messages"; //$NON-NLS-1$
   public static String ApplyCopyrightWizard_error;
+  public static String ApplyCopyrightWizard_selectionTaskMessage;
   public static String ApplyCopyrightWizard_title;
   public static String CopyrightManager_customLabel;
   public static String CopyrightManager_err_licenseCreate;
   public static String CopyrightManager_err_readContent;
   public static String CopyrightManager_err_selection;
   public static String CopyrightManager_err_validation;
+  public static String CopyrightManager_jobName;
+  public static String CopyrightManager_taskName;
   public static String CopyrightPreferencePage_buttonAdd;
   public static String CopyrightPreferencePage_buttonDelete;
   public static String CopyrightPreferencePage_buttonModify;
