@@ -299,11 +299,8 @@ public class CopyrightManager {
       }
 
       // Updates the file content
-      file.setContents(new ByteArrayInputStream(buffer.toString().getBytes()),
+      file.setContents(new ByteArrayInputStream(buffer.toString().getBytes(charset)),
                        true, true, null);
-      if ( ! charset.equals(file.getParent().getDefaultCharset()) ) {
-        file.setCharset(charset, null);
-      }
       file.refreshLocal(0, null);
     } catch (Exception e) {
       throw new CopyrightException(NLS.bind(Messages.CopyrightManager_err_readContent, file.getName()), e);
