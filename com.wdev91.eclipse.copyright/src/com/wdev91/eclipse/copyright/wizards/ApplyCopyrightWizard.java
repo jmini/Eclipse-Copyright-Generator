@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Eric Wuillai.
+ * Copyright (c) 2008-2009 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,16 +61,6 @@ public class ApplyCopyrightWizard extends Wizard {
     settingsPage.init(settings);
   }
 
-  private void computeSelection() {
-    try {
-      selectionPage.setSelection(CopyrightManager.selectResources(settings));
-      settings.setChanged(false);
-    } catch (CopyrightException e) {
-      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error,
-                              e.getMessage());
-    }
-  }
-
   private void computeSelectionWithProgress() {
     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try {
@@ -79,8 +69,15 @@ public class ApplyCopyrightWizard extends Wizard {
             public void run(IProgressMonitor monitor) {
               monitor.beginTask(Messages.ApplyCopyrightWizard_selectionTaskMessage,
                                 IProgressMonitor.UNKNOWN);
-              computeSelection();
-              monitor.done();
+              try {
+								selectionPage.setSelection(CopyrightManager.selectResources(settings, monitor));
+								settings.setChanged(false);
+	              monitor.done();
+							} catch (CopyrightException e) {
+	              monitor.done();
+					      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error,
+                    										e.getMessage());
+							}
             }
           },
           null);

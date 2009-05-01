@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Eric Wuillai.
+ * Copyright (c) 2008-2009 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,17 +24,25 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightSettings;
 
+/**
+ * Wizard page for the selection of projects on which to apply the copyright.
+ */
 public class ProjectSelectionWizardPage extends WizardPage {
   public static final String DEFAULT_PAGE_NAME = "projectSelectionPage"; //$NON-NLS-1$
 
   protected CheckboxTableViewer viewer;
+  protected Button override;
+  protected Button overrideText;
+
   protected CopyrightSettings settings;
 
   ProjectSelectionWizardPage() {
@@ -70,7 +78,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
         return projects.toArray();
       }
     });
-    viewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
+    viewer.setLabelProvider(new ProjectLabelProvider());
     viewer.setInput(ResourcesPlugin.getWorkspace());
     viewer.addCheckStateListener(new ICheckStateListener() {
       public void checkStateChanged(CheckStateChangedEvent event) {
@@ -79,11 +87,54 @@ public class ProjectSelectionWizardPage extends WizardPage {
     });
     viewer.setCheckedElements(settings.getProjects());
 
+    override = new Button(top, SWT.CHECK);
+    override.setText(Messages.ProjectSelectionWizardPage_checkboxOverrideSettings);
+
+    overrideText = new Button(top, SWT.CHECK);
+    overrideText.setText(Messages.ProjectSelectionWizardPage_checkboxOverrideFormatsOnly);
+    overrideText.setEnabled(false);
+    data = new GridData();
+    data.horizontalIndent = 15;
+    overrideText.setLayoutData(data);
+
+    Listener listener = new Listener() {
+      public void handleEvent(Event event) {
+        if ( event.widget == override ) {
+          overrideText.setEnabled(override.getSelection());
+        }
+        validatePage();
+      }
+    };
+    override.addListener(SWT.Selection, listener);
+    overrideText.addListener(SWT.Selection, listener);
+
     setPageComplete(settings.getProjects().length > 0);
     setControl(top);
   }
 
-  public IProject[] getSelectedProjects() {
+  /**
+   * Returns the override selection, coded as an integer:
+   *  0: no override of projects copyrighth settings
+   *  1: override header content only. Projects header formats definitions are preserved.
+   *  2: override header content and formats definitions.
+   * 
+   * @return override selection code
+   */
+  protected int getOverrideSelection() {
+    return override.getSelection()
+           ? (overrideText.getSelection()
+              ? CopyrightSettings.OVERRIDE_TEXT
+              : CopyrightSettings.OVERRIDE_ALL)
+           : CopyrightSettings.OVERRIDE_NONE;
+  }
+
+  /**
+   * Returns an array of all the selected projects, on which the copyright will
+   * be applied.
+   * 
+   * @return array of projects
+   */
+  protected IProject[] getSelectedProjects() {
     Object[] objs = viewer.getCheckedElements();
     IProject[] projects = new IProject[objs.length];
     for (int i = 0; i < objs.length; i++) {
@@ -99,5 +150,6 @@ public class ProjectSelectionWizardPage extends WizardPage {
   protected void validatePage() {
     setPageComplete(viewer.getCheckedElements().length > 0);
     settings.setProjects(getSelectedProjects());
+    settings.setOverride(getOverrideSelection());
   }
 }

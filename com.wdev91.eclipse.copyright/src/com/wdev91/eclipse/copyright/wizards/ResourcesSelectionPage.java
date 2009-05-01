@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Eric Wuillai.
+ * Copyright (c) 2008-2009 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightSelectionItem;
@@ -74,11 +75,20 @@ public class ResourcesSelectionPage extends WizardPage {
     settings.setFiles(selection.toArray(new IFile[selection.size()]));
   }
 
+  private void setChecked(TreeItem[] items) {
+  	for (TreeItem item : items) {
+    	item.setChecked(true);
+    	setChecked(item.getItems());
+    }
+  }
+
   public void setSelection(CopyrightSelectionItem[] selection) {
     viewer.setInput(new CopyrightSelectionInput(selection));
+    viewer.getTree().setRedraw(false);
     viewer.expandAll();
-    viewer.setAllChecked(true);
+    setChecked(viewer.getTree().getItems());
     viewer.collapseAll();
+    viewer.getTree().setRedraw(true);
     validatePage();
   }
 

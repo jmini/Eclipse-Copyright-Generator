@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Eric Wuillai.
+ * Copyright (c) 2008-2009 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 public class CopyrightSettings {
+  public static final int OVERRIDE_NONE = 0;
+  public static final int OVERRIDE_TEXT = 1;
+  public static final int OVERRIDE_ALL = 2;
+
   /** Selected projects */
   protected IProject[] projects;
   /** Pattern for resources filtering */
@@ -28,6 +32,8 @@ public class CopyrightSettings {
   protected Copyright copyright;
   /** License file name to add in selected projects. */
   protected String licenseFile;
+  /** Override project settings flag */
+  protected int override;
 
   public Copyright getCopyright() {
     return copyright;
@@ -35,6 +41,10 @@ public class CopyrightSettings {
 
   public String getLicenseFile() {
     return licenseFile;
+  }
+
+  public int getOverride() {
+    return override;
   }
 
   public String getPattern() {
@@ -67,16 +77,21 @@ public class CopyrightSettings {
 
   public void setForceApply(boolean forceApply) {
     this.forceApply = forceApply;
-    this.changed  = true;
+    this.changed    = true;
   }
 
   public void setLicenseFile(String licenseFile) {
     this.licenseFile = licenseFile;
   }
 
+  public void setOverride(int override) {
+    this.override = override;
+    this.changed  = true;
+  }
+
   public void setPattern(String pattern) {
     this.pattern = pattern;
-    this.changed  = true;
+    this.changed = true;
   }
 
   public void setProjects(IProject[] projects) {

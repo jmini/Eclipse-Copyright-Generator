@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Eric Wuillai.
+ * Copyright (c) 2008-2009 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,9 +52,17 @@ public class Messages extends NLS {
   public static String HeadersPreferencePage_checkPreserveFirstLine;
   public static String HeadersPreferencePage_errorInvalidHeaderFormat;
   public static String HeadersPreferencePage_errorTitle;
+  public static String HeadersPreferencePage_labelBlankLines;
   public static String HeadersPreferencePage_labelFirstLine;
   public static String HeadersPreferencePage_labelLastLine;
   public static String HeadersPreferencePage_labelLinePrefix;
+  public static String ProjectCopyrightPreferencePage_checkboxEnable;
+  public static String ProjectCopyrightPreferencePage_errmsgOnSave;
+  public static String ProjectCopyrightPreferencePage_errTitle;
+  public static String ProjectCopyrightPreferencePage_msgInitialize;
+  public static String ProjectCopyrightPreferencePage_tabFormats;
+  public static String ProjectSelectionWizardPage_checkboxOverrideFormatsOnly;
+  public static String ProjectSelectionWizardPage_checkboxOverrideSettings;
   public static String ProjectSelectionWizardPage_description;
   public static String ProjectSelectionWizardPage_title;
   public static String ResourcesSelectionPage_description;
