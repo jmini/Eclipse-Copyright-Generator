@@ -711,11 +711,11 @@ public class CopyrightManager {
       for (Copyright cp : copyrights) {
         writer.println("\t<" + TAG_COPYRIGHT + " " + ATT_LABEL + "=\""
         							 + cp.getLabel() + "\">");
-        writer.println("\t\t<" + TAG_HEADER + "><![CDATA[" + cp.getHeaderText()
+        writer.println("\t\t<" + TAG_HEADER + "><![CDATA[" + stripNonValidXMLCharacters(cp.getHeaderText())
         							 + "]]></" + TAG_HEADER + '>');
         writer.println("\t\t<" + TAG_LICENSE + " " + ATT_FILENAME + "=\""
         							 + cp.getLicenseFilename() + "\"><![CDATA["
-        							 + cp.getLicenseText() + "]]></" + TAG_LICENSE + '>');
+        							 + stripNonValidXMLCharacters(cp.getLicenseText()) + "]]></" + TAG_LICENSE + '>');
         writer.println("\t</" + TAG_COPYRIGHT + '>');
       }
       writer.println("</" + TAG_CROOT + '>');
@@ -785,7 +785,7 @@ public class CopyrightManager {
       PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project), XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_PROOT + '>');
-      writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + preferences.getHeaderText()
+      writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())
       							 + "]]></" + TAG_COPYRIGHT + '>');
       for (HeaderFormat format : preferences.getFormats().values()) {
         writer.println("\t<" + TAG_HEADER
@@ -858,6 +858,36 @@ public class CopyrightManager {
       }
     }
     return membersSelection.toArray(new CopyrightSelectionItem[] {});
+  }
+
+  /**
+   * This method ensures that the output String has only valid XML unicode
+   * characters as specified by the XML 1.0 standard. For reference, please
+   * see
+   * <a href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char">the
+   * standard</a>. This method will return an empty String if the input is
+   * null or empty.
+   *
+   * @param in The String whose non-valid characters we want to remove.
+   * @return The in String, stripped of non-valid characters.
+   */
+  private static String stripNonValidXMLCharacters(String in) {
+  	StringBuffer out = new StringBuffer(); // Used to hold the output.
+  	char current; // Used to reference the current character.
+
+  	if ( in == null || ("".equals(in)) ) return "";
+  	for (int i = 0; i < in.length(); i++) {
+  		current = in.charAt(i);
+  		if ( (current == 0x9) ||
+  				 (current == 0xA) ||
+  				 (current == 0xD) ||
+  				 ((current >= 0x20) && (current <= 0xD7FF)) ||
+  				 ((current >= 0xE000) && (current <= 0xFFFD)) ||
+  				 ((current >= 0x10000) && (current <= 0x10FFFF)) ) {
+  			out.append(current);
+  		}
+  	}
+  	return out.toString();
   }
 
   /**
