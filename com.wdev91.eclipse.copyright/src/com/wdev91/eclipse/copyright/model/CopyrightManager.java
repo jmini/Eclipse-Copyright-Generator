@@ -102,6 +102,7 @@ public class CopyrightManager {
   private static final String ATT_POSTBLANKLINES = "postBlankLines"; //$NON-NLS-1$
   private static final String ATT_LINEFORMAT = "lineFormat"; //$NON-NLS-1$
   private static final String ATT_PRESERVEFIRST = "preserveFirstLine"; //$NON-NLS-1$
+  private static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
 
   /** The repository root directory */
   private static File repository;
@@ -560,6 +561,16 @@ public class CopyrightManager {
     return true;
   }
 
+  /**
+   * Returns list of copyright readed from the XML store file, if it is present
+   * in the workspace. If no store file can be found, an empty list is returned.
+   * 
+   * If the custom parameter is set to true, a CUSTOM copyright entry is added
+   * at the beginning of the returned list.
+   * 
+   * @param custom true to add CUSTOM copyright in the returned list.
+   * @return List of copyrights (can be empty).
+   */
   public static List<Copyright> listCopyrights(boolean custom) {
     List<Copyright> copyrights = new ArrayList<Copyright>();
     try {
@@ -694,13 +705,17 @@ public class CopyrightManager {
    */
   public static void saveCopyrights(Collection<Copyright> copyrights) {
     try {
-      PrintWriter writer = new PrintWriter(getRepositoryFile());
-      writer.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"); //$NON-NLS-1$
+      PrintWriter writer = new PrintWriter(getRepositoryFile(), XML_ENCODING);
+      writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_CROOT + '>');
       for (Copyright cp : copyrights) {
-        writer.println("\t<" + TAG_COPYRIGHT + " " + ATT_LABEL + "=\"" + cp.getLabel() + "\">");
-        writer.println("\t\t<" + TAG_HEADER + "><![CDATA[" + cp.getHeaderText() + "]]></" + TAG_HEADER + '>');
-        writer.println("\t\t<" + TAG_LICENSE + " " + ATT_FILENAME + "=\"" + cp.getLicenseFilename() + "\"><![CDATA[" + cp.getLicenseText() + "]]></" + TAG_LICENSE + '>');
+        writer.println("\t<" + TAG_COPYRIGHT + " " + ATT_LABEL + "=\""
+        							 + cp.getLabel() + "\">");
+        writer.println("\t\t<" + TAG_HEADER + "><![CDATA[" + cp.getHeaderText()
+        							 + "]]></" + TAG_HEADER + '>');
+        writer.println("\t\t<" + TAG_LICENSE + " " + ATT_FILENAME + "=\""
+        							 + cp.getLicenseFilename() + "\"><![CDATA["
+        							 + cp.getLicenseText() + "]]></" + TAG_LICENSE + '>');
         writer.println("\t</" + TAG_COPYRIGHT + '>');
       }
       writer.println("</" + TAG_CROOT + '>');
@@ -721,8 +736,8 @@ public class CopyrightManager {
    */
   public static void saveFormats(Collection<HeaderFormat> formats) {
     try {
-      PrintWriter writer = new PrintWriter(getHeaderFile());
-      writer.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"); //$NON-NLS-1$
+      PrintWriter writer = new PrintWriter(getHeaderFile(), XML_ENCODING);
+      writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_HROOT + '>');
       for (HeaderFormat format : formats) {
         writer.println("\t<" + TAG_HEADER
@@ -730,9 +745,12 @@ public class CopyrightManager {
                        + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
                        + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
                        + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
-        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine() + "]]></" + TAG_BEGIN + '>');
-        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix() + "]]></" + TAG_PREFIX + '>');
-        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine() + "]]></" + TAG_END + '>');
+        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
+        							 + "]]></" + TAG_BEGIN + '>');
+        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
+        							 + "]]></" + TAG_PREFIX + '>');
+        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
+        							 + "]]></" + TAG_END + '>');
         writer.println("\t</" + TAG_HEADER + '>');
       }
       writer.println("</" + TAG_HROOT + '>');
@@ -760,22 +778,27 @@ public class CopyrightManager {
    * @param preferences project copyright preferences, or null to disable
    * @throws IOException
    */
-  public static void saveProjectPreferences(IProject project, ProjectPreferences preferences) throws IOException {
+  public static void saveProjectPreferences(IProject project, ProjectPreferences preferences)
+  throws IOException {
     File projectFile = getProjectPreferencesFile(project);
     if ( preferences != null ) {
-      PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project));
-      writer.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"); //$NON-NLS-1$
+      PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project), XML_ENCODING);
+      writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_PROOT + '>');
-      writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + preferences.getHeaderText() + "]]></" + TAG_COPYRIGHT + '>');
+      writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + preferences.getHeaderText()
+      							 + "]]></" + TAG_COPYRIGHT + '>');
       for (HeaderFormat format : preferences.getFormats().values()) {
         writer.println("\t<" + TAG_HEADER
                        + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
                        + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
                        + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
                        + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
-        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine() + "]]></" + TAG_BEGIN + '>');
-        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix() + "]]></" + TAG_PREFIX + '>');
-        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine() + "]]></" + TAG_END + '>');
+        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
+        							 + "]]></" + TAG_BEGIN + '>');
+        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
+        							 + "]]></" + TAG_PREFIX + '>');
+        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
+        							 + "]]></" + TAG_END + '>');
         writer.println("\t</" + TAG_HEADER + '>');
       }
       writer.println("</" + TAG_PROOT + '>');
@@ -795,7 +818,8 @@ public class CopyrightManager {
    * @return Array of selection items
    * @throws CopyrightException
    */
-  public static CopyrightSelectionItem[] selectResources(CopyrightSettings settings, IProgressMonitor monitor) throws CopyrightException {
+  public static CopyrightSelectionItem[] selectResources(CopyrightSettings settings,
+  		IProgressMonitor monitor) throws CopyrightException {
     String[] patterns = settings.getPattern().split(","); //$NON-NLS-1$
     StringMatcher[] matchers = new StringMatcher[patterns.length];
     for (int i = 0; i < patterns.length; i++) {
@@ -817,7 +841,8 @@ public class CopyrightManager {
   }
 
   private static CopyrightSelectionItem[] selectResources(IContainer parent,
-        StringMatcher[] matchers, CopyrightSettings settings, IProgressMonitor monitor) throws CoreException, CopyrightException {
+      StringMatcher[] matchers, CopyrightSettings settings, IProgressMonitor monitor)
+  throws CoreException, CopyrightException {
     List<CopyrightSelectionItem> membersSelection = new ArrayList<CopyrightSelectionItem>();
     IResource[] members = parent.members();
     for (IResource member : members) {
