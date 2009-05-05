@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.model;
 
+import com.wdev91.eclipse.copyright.Constants;
+
 /**
  * Copyright definition.
  */
@@ -19,15 +21,15 @@ public class Copyright {
   /** Text to insert as header of files */
   protected String headerText;
   /** File name of the license file */
-  protected String licenseFilename;
+  protected String licenseFilename = Constants.EMPTY_STRING;
   /** Text content of the license file */
-  protected String licenseText;
+  protected String licenseText = Constants.EMPTY_STRING;
 
   /**
    * Constructor. Creates a copyright with the given label.
    */
   public Copyright(String label) {
-    this.label = label;
+    this.label = label.trim();
   }
 
   public String getHeaderText() {
@@ -51,11 +53,11 @@ public class Copyright {
   }
 
   public void setLabel(String label) {
-    this.label = label;
+    this.label = label.trim();
   }
 
   public void setLicenseFilename(String licenseFilename) {
-    this.licenseFilename = licenseFilename;
+    this.licenseFilename = licenseFilename.trim();
   }
 
   public void setLicenseText(String licenseText) {
