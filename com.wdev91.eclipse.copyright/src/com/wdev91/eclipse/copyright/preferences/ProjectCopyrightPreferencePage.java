@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import com.wdev91.eclipse.copyright.Messages;
+import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
 import com.wdev91.eclipse.copyright.model.HeaderFormat;
 import com.wdev91.eclipse.copyright.model.ProjectPreferences;
@@ -129,30 +130,35 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
 
   @Override
   public boolean performOk() {
-    Collection<HeaderFormat> headerFormats = formats.getFormats();
-    for (HeaderFormat format : headerFormats) {
-      if ( format.getBeginLine().trim().length() == 0
-           || format.getEndLine().trim().length() == 0 ) {
-        MessageDialog.openError(getShell(), Messages.ProjectCopyrightPreferencePage_errTitle,
-                                NLS.bind(Messages.HeadersPreferencePage_errorInvalidHeaderFormat,
-                                    Platform.getContentTypeManager()
-                                            .getContentType(format.getContentId())
-                                            .getName()));
-        return false;
+  	ProjectPreferences preferences = null;
+  	if ( enableButton.getSelection() ) {
+    	Collection<HeaderFormat> headerFormats = formats.getFormats();
+      for (HeaderFormat format : headerFormats) {
+        if ( format.getBeginLine().trim().length() == 0
+             || format.getEndLine().trim().length() == 0 ) {
+          MessageDialog.openError(getShell(), Messages.ProjectCopyrightPreferencePage_errTitle,
+                                  NLS.bind(Messages.HeadersPreferencePage_errorInvalidHeaderFormat,
+                                      Platform.getContentTypeManager()
+                                              .getContentType(format.getContentId())
+                                              .getName()));
+          return false;
+        }
       }
-    }
-    ProjectPreferences preferences = enableButton.getSelection()
-                                     ? new ProjectPreferences(headerText.getText(),
-                                                              headerFormats)
-                                     : null;
-    try {
+  		preferences = new ProjectPreferences(headerText.getText(), headerFormats);
+  	}
+
+  	try {
       CopyrightManager.saveProjectPreferences(project, preferences);
       return super.performOk();
     } catch (IOException e) {
       MessageDialog.openError(getShell(), Messages.ProjectCopyrightPreferencePage_errTitle,
                               NLS.bind(Messages.ProjectCopyrightPreferencePage_errmsgOnSave, e.getMessage()));
       return false;
-    }
+    } catch (CopyrightException e) {
+      MessageDialog.openError(getShell(), Messages.ProjectCopyrightPreferencePage_errTitle,
+          										e.getMessage());
+      return false;
+		}
   }
 
 	@Override

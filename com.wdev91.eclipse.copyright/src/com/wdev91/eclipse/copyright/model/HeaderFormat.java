@@ -12,6 +12,8 @@ package com.wdev91.eclipse.copyright.model;
 
 import org.eclipse.core.runtime.content.IContentTypeManager;
 
+import com.wdev91.eclipse.copyright.Constants;
+
 public class HeaderFormat {
   public static final String CT_JAVA = "org.eclipse.jdt.core.javaSource"; //$NON-NLS-1$
   public static final String CT_XML = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
@@ -24,7 +26,7 @@ public class HeaderFormat {
   protected boolean lineCommentFormat = true;
   protected String beginLine;
   protected String endLine;
-  protected String linePrefix = ""; //$NON-NLS-1$
+  protected String linePrefix = Constants.EMPTY_STRING;
   protected int postBlankLines = 0;
   protected boolean preserveFirstLine = false;
 

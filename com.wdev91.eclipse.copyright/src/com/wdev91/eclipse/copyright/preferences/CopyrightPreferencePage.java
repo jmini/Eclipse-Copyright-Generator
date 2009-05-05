@@ -12,6 +12,7 @@ package com.wdev91.eclipse.copyright.preferences;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
@@ -42,6 +43,7 @@ import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Constants;
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.Copyright;
+import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.viewers.CopyrightContentProvider;
 import com.wdev91.eclipse.copyright.viewers.CopyrightLabelProvider;
 import com.wdev91.eclipse.copyright.viewers.CopyrightsInput;
@@ -77,7 +79,18 @@ public class CopyrightPreferencePage extends PreferencePage
                                          Messages.CopyrightPreferencePage_inputTitle,
                                          Messages.CopyrightPreferencePage_inputLabel,
                                          null,
-                                         null);
+                                         new IInputValidator() {
+																					 public String isValid(String newText) {
+																						 String label = newText.trim();
+																						 if ( label.length() == 0 ) {
+																							 return Messages.CopyrightPreferencePage_err_noLabelProvided;
+																						 }
+																						 if ( input.exists(label) ) {
+																							 return Messages.CopyrightPreferencePage_err_labelAlreadyExists;
+																						 }
+																						 return null;
+																					 }
+    																		 });
     if ( dialog.open() == InputDialog.OK ) {
       Copyright c = new Copyright(dialog.getValue());
       c.setHeaderText(Constants.EMPTY_STRING);
@@ -247,11 +260,21 @@ public class CopyrightPreferencePage extends PreferencePage
     setPreferenceStore(Activator.getDefault().getPreferenceStore());
   }
 
+  /*
+   * @see org.eclipse.jface.preference.PreferencePage#performOk()
+   */
   @Override
   public boolean performOk() {
     getPreferenceStore().setValue(Constants.PREFERENCES_OWNER, ownerText.getText().trim());
     updateContent();
-    input.save();
+    try {
+			input.save();
+		} catch (CopyrightException e) {
+			MessageDialog.openError(this.getShell(),
+															Messages.CopyrightPreferencePage_titleCopyrights,
+															e.getMessage());
+			return false;
+		}
     return true;
   }
 

@@ -702,9 +702,23 @@ public class CopyrightManager {
    * present in the repository are replaced.
    * 
    * @param copyrights
+   * @throws CopyrightException 
    */
-  public static void saveCopyrights(Collection<Copyright> copyrights) {
-    try {
+  public static void saveCopyrights(Collection<Copyright> copyrights) throws CopyrightException {
+  	// Verification of the copyrights
+  	for (Copyright cp : copyrights) {
+    	if ( cp.getHeaderText().length() == 0 ) {
+    		throw new CopyrightException(NLS.bind(Messages.CopyrightManager_err_savingHeaderTextMissing, cp.getLabel()));
+    	}
+    	if ( cp.getLicenseText().length() != 0 && cp.getLicenseFilename().length() == 0 ) {
+    		throw new CopyrightException(NLS.bind(Messages.CopyrightManager_err_savingFileNameMissing, cp.getLabel()));
+    	} else if ( cp.getLicenseText().length() == 0 && cp.getLicenseFilename().length() != 0 ) {
+    		throw new CopyrightException(NLS.bind(Messages.CopyrightManager_err_savingLicenseTextMissing, cp.getLabel()));
+    	}
+    }
+
+  	// Save of the copyrights in the XML store file
+  	try {
       PrintWriter writer = new PrintWriter(getRepositoryFile(), XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_CROOT + '>');
@@ -722,7 +736,7 @@ public class CopyrightManager {
       writer.flush();
       writer.close();
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new CopyrightException(Messages.CopyrightManager_err_savingXmlFile + e.getMessage());
     }
   }
 
@@ -777,12 +791,17 @@ public class CopyrightManager {
    * @param project project
    * @param preferences project copyright preferences, or null to disable
    * @throws IOException
+   * @throws CopyrightException 
    */
   public static void saveProjectPreferences(IProject project, ProjectPreferences preferences)
-  throws IOException {
+  throws IOException, CopyrightException {
     File projectFile = getProjectPreferencesFile(project);
     if ( preferences != null ) {
-      PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project), XML_ENCODING);
+    	if ( preferences.getHeaderText().length() == 0 ) {
+    		throw new CopyrightException(Messages.CopyrightManager_err_savingHeaderTextMissingForProject);
+    	}
+
+    	PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project), XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_PROOT + '>');
       writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())

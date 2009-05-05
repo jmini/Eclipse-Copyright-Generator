@@ -13,6 +13,7 @@ package com.wdev91.eclipse.copyright.viewers;
 import java.util.List;
 
 import com.wdev91.eclipse.copyright.model.Copyright;
+import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
 
 public class CopyrightsInput {
@@ -23,11 +24,9 @@ public class CopyrightsInput {
   }
 
   public boolean addCopyright(Copyright copyright) {
-    for (Copyright c : copyrights) {
-      if ( c.getLabel().equalsIgnoreCase(copyright.getLabel()) ) {
-        return false;
-      }
-    }
+  	if ( exists(copyright.getLabel()) ) {
+  		return false;
+  	}
     copyrights.add(copyright);
     return true;
   }
@@ -36,11 +35,20 @@ public class CopyrightsInput {
     return copyrights.remove(copyright);
   }
 
+  public boolean exists(String label) {
+    for (Copyright c : copyrights) {
+      if ( c.getLabel().equalsIgnoreCase(label) ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public Copyright[] getCopyrights() {
     return copyrights.toArray(new Copyright[] {});
   }
 
-  public void save() {
+  public void save() throws CopyrightException {
     CopyrightManager.saveCopyrights(copyrights);
   }
 }
