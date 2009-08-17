@@ -102,6 +102,7 @@ public class CopyrightSettingsPage extends WizardPage {
     patterns = new Text(top, SWT.BORDER);
     patterns.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     patterns.setFont(font);
+    patterns.setToolTipText("Files names pattern for resources selection (default: * = all)");
     Label l4 = new Label(top, SWT.NONE);
     l4.setText(Messages.CopyrightSettingsPage_msgPatternsDescr);
     data = new GridData(GridData.FILL_HORIZONTAL);
@@ -197,21 +198,16 @@ public class CopyrightSettingsPage extends WizardPage {
   }
 
   protected void validatePage(Widget widget) {
-    if ( widget == headerText || widget == patterns ) {
+  	if ( widget == headerText ) {
       String header = headerText.getText().trim();
-      String pattern = patterns.getText().trim();
-      setPageComplete(header.length() > 0 && pattern.length() > 0);
-      if ( widget == headerText ) {
-        Copyright cp = settings.getCopyright();
-        if ( cp != null ) {
-          cp.setHeaderText(header);
-        }
+      setPageComplete(header.length() > 0);
+      Copyright cp = settings.getCopyright();
+      if ( cp != null ) {
+        cp.setHeaderText(header);
       }
-      if ( widget == patterns ) {
-        settings.setPattern(pattern);
-      }
-    }
-    if ( widget == licenseFile ) {
+  	} else if ( widget == patterns ) {
+      settings.setPattern(patterns.getText().trim());
+    } else if ( widget == licenseFile ) {
       settings.setLicenseFile(licenseFile.getText().trim());
     }
   }
