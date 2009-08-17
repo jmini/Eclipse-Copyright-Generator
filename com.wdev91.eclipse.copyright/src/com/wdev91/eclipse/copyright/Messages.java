@@ -49,9 +49,12 @@ public class Messages extends NLS {
   public static String CopyrightSettingsPage_checkboxAddLicense;
   public static String CopyrightSettingsPage_checkboxReplaceHeaders;
   public static String CopyrightSettingsPage_description;
+	public static String CopyrightSettingsPage_excludePattern;
+	public static String CopyrightSettingsPage_excludePatternTooltip;
   public static String CopyrightSettingsPage_labelHeader;
   public static String CopyrightSettingsPage_labelLicenseFile;
-  public static String CopyrightSettingsPage_labelPatterns;
+  public static String CopyrightSettingsPage_includePattern;
+	public static String CopyrightSettingsPage_includePatternTooltip;
   public static String CopyrightSettingsPage_labelTypes;
   public static String CopyrightSettingsPage_msgPatternsDescr;
   public static String CopyrightSettingsPage_title;
@@ -74,6 +77,8 @@ public class Messages extends NLS {
   public static String ProjectSelectionWizardPage_description;
   public static String ProjectSelectionWizardPage_title;
   public static String ResourcesSelectionPage_description;
+	public static String ResourcesSelectionPage_noResourcesInfo;
+	public static String ResourcesSelectionPage_selectedFileInfo;
   public static String ResourcesSelectionPage_title;
   static {
     // initialize resource bundle
