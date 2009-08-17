@@ -500,14 +500,16 @@ public class CopyrightManager {
    * Checks if a given file is valid for selection to apply the copyright.
    * 
    * @param file The file to check
-   * @param matchers Extensions patterns matchers array.
+   * @param includeMatchers Extensions patterns matchers array.
    * @param forceApply <code>true</code> if existing header must be overrided.
    * @param override flag indicating if the project copyright settings must be overrided.
    * @return <code>true<code> if valid for selection, else <code>false</code>
    * @throws CopyrightException 
    */
-  private static boolean isValidFile(IFile file, StringMatcher[] matchers, CopyrightSettings settings) throws CopyrightException {
-    BufferedReader reader = null;
+  private static boolean isValidFile(IFile file, StringMatcher[] includeMatchers,
+			StringMatcher[] excludeMatchers, CopyrightSettings settings)
+			throws CopyrightException {
+  	BufferedReader reader = null;
     try {
       // Checks if file is writable
       if ( file.isPhantom() || file.isReadOnly() ) {
@@ -522,13 +524,21 @@ public class CopyrightManager {
 
       // Filters by patterns
       boolean patternOk = false;
-      for (StringMatcher matcher : matchers) {
-        if ( matcher.match(file.getName()) ) {
+      for (StringMatcher incMatcher : includeMatchers) {
+        if ( incMatcher.match(file.getName()) ) {
           patternOk = true;
           break;
         }
       }
       if ( ! patternOk ) return false;
+
+      if ( excludeMatchers != null ) {
+        for (StringMatcher excMatcher : excludeMatchers) {
+          if ( excMatcher.match(file.getName()) ) {
+            return false;
+          }
+        }
+      }
 
       // Checks if the file already have a header
       if ( ! settings.isForceApply() ) {
@@ -839,16 +849,27 @@ public class CopyrightManager {
    */
   public static CopyrightSelectionItem[] selectResources(CopyrightSettings settings,
   		IProgressMonitor monitor) throws CopyrightException {
-    String[] patterns = settings.getPattern().split(","); //$NON-NLS-1$
-    StringMatcher[] matchers = new StringMatcher[patterns.length];
-    for (int i = 0; i < patterns.length; i++) {
-      matchers[i] = new StringMatcher(patterns[i].trim());
+    String[] includePatterns = settings.getIncludePattern().split(","); //$NON-NLS-1$
+    StringMatcher[] includeMatchers = new StringMatcher[includePatterns.length];
+    for (int i = 0; i < includePatterns.length; i++) {
+      includeMatchers[i] = new StringMatcher(includePatterns[i].trim());
+    }
+
+    StringMatcher[] excludeMatchers = null;
+    String patterns = settings.getExcludePattern();
+    if ( patterns != null ) {
+      String[] excludePatterns = patterns.split(","); //$NON-NLS-1$
+      excludeMatchers = new StringMatcher[excludePatterns.length];
+      for (int i = 0; i < excludePatterns.length; i++) {
+        excludeMatchers[i] = new StringMatcher(excludePatterns[i].trim());
+      }
     }
 
     List<CopyrightSelectionItem> projectsSelection = new ArrayList<CopyrightSelectionItem>(settings.getProjects().length);
     for (IProject project : settings.getProjects()) {
       try {
-        CopyrightSelectionItem[] selection = selectResources(project, matchers, settings, monitor);
+        CopyrightSelectionItem[] selection = selectResources(project, includeMatchers,
+        		excludeMatchers, settings, monitor);
         if ( selection.length > 0 ) {
           projectsSelection.add(new CopyrightSelectionItem(project, selection));
         }
@@ -860,17 +881,20 @@ public class CopyrightManager {
   }
 
   private static CopyrightSelectionItem[] selectResources(IContainer parent,
-      StringMatcher[] matchers, CopyrightSettings settings, IProgressMonitor monitor)
+      StringMatcher[] includeMatchers, StringMatcher[] excludeMatchers,
+      CopyrightSettings settings, IProgressMonitor monitor)
   throws CoreException, CopyrightException {
     List<CopyrightSelectionItem> membersSelection = new ArrayList<CopyrightSelectionItem>();
     IResource[] members = parent.members();
     for (IResource member : members) {
     	monitor.subTask(parent.getName() + " - " + member.getFullPath().toPortableString()); //$NON-NLS-1$
       if ( member.getName().startsWith(".") ) continue; //$NON-NLS-1$
-      if ( member instanceof IFile && isValidFile((IFile) member, matchers, settings) ) {
+      if ( member instanceof IFile && isValidFile((IFile) member, includeMatchers,
+      																						excludeMatchers, settings) ) {
         membersSelection.add(new CopyrightSelectionItem(member, null));
       } else if ( member instanceof IContainer ) {
-        CopyrightSelectionItem[] selection = selectResources((IContainer) member, matchers, settings, monitor);
+        CopyrightSelectionItem[] selection = selectResources((IContainer) member,
+        		includeMatchers, excludeMatchers, settings, monitor);
         if ( selection.length > 0 ) {
           membersSelection.add(new CopyrightSelectionItem(member, selection));
         }

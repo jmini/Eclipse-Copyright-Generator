@@ -22,8 +22,10 @@ public class CopyrightSettings {
 
   /** Selected projects */
   protected IProject[] projects;
-  /** Pattern for resources filtering */
-  protected String pattern;
+  /** Pattern for resources selection */
+  protected String includePattern;
+  /** Pattern for resources exclusion */
+  protected String excludePattern;
   /** Flag indicating settings having impact on resources selection have changed */
   protected boolean changed;
   /** Files on which to apply the copyright */
@@ -49,11 +51,15 @@ public class CopyrightSettings {
     return override;
   }
 
-  public String getPattern() {
-    return pattern != null && pattern.length() > 0 ? pattern : DEFAULT_INCLUDE_PATTERN;
+  public String getIncludePattern() {
+    return includePattern != null && includePattern.length() > 0 ? includePattern : DEFAULT_INCLUDE_PATTERN;
   }
 
-  public IProject[] getProjects() {
+  public String getExcludePattern() {
+    return excludePattern != null && excludePattern.length() > 0 ? excludePattern : null;
+	}
+
+	public IProject[] getProjects() {
     return projects != null ? projects : new IProject[0];
   }
 
@@ -91,12 +97,17 @@ public class CopyrightSettings {
     this.changed  = true;
   }
 
-  public void setPattern(String pattern) {
-    this.pattern = pattern.trim();
+  public void setIncludePattern(String pattern) {
+    this.includePattern = pattern != null ? pattern.trim() : null;
     this.changed = true;
   }
 
-  public void setProjects(IProject[] projects) {
+  public void setExcludePattern(String pattern) {
+		this.excludePattern = pattern != null ? pattern.trim() : null;
+    this.changed = true;
+	}
+
+	public void setProjects(IProject[] projects) {
     this.projects = projects;
     this.changed  = true;
   }

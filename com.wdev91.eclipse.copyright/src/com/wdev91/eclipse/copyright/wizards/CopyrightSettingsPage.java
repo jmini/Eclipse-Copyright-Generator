@@ -47,7 +47,8 @@ public class CopyrightSettingsPage extends WizardPage {
 
   protected ComboViewer copyrightType;
   protected Text headerText;
-  protected Text patterns;
+  protected Text includePattern;
+  protected Text excludePattern;
   protected Button forceApply;
   protected Button addLicenseFile;
   protected Text licenseFile;
@@ -97,12 +98,19 @@ public class CopyrightSettingsPage extends WizardPage {
     headerText.setFont(font);
 
     Label l3 = new Label(top, SWT.NONE);
-    l3.setText(Messages.CopyrightSettingsPage_labelPatterns);
+    l3.setText(Messages.CopyrightSettingsPage_includePattern);
     l3.setFont(font);
-    patterns = new Text(top, SWT.BORDER);
-    patterns.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    patterns.setFont(font);
-    patterns.setToolTipText("Files names pattern for resources selection (default: * = all)");
+    includePattern = new Text(top, SWT.BORDER);
+    includePattern.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    includePattern.setFont(font);
+    includePattern.setToolTipText(Messages.CopyrightSettingsPage_includePatternTooltip);
+    Label l6 = new Label(top, SWT.NONE);
+    l6.setText(Messages.CopyrightSettingsPage_excludePattern);
+    l6.setFont(font);
+    excludePattern = new Text(top, SWT.BORDER);
+    excludePattern.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    excludePattern.setFont(font);
+    excludePattern.setToolTipText(Messages.CopyrightSettingsPage_excludePatternTooltip);
     Label l4 = new Label(top, SWT.NONE);
     l4.setText(Messages.CopyrightSettingsPage_msgPatternsDescr);
     data = new GridData(GridData.FILL_HORIZONTAL);
@@ -189,7 +197,8 @@ public class CopyrightSettingsPage extends WizardPage {
       }
     };
     headerText.addModifyListener(listener);
-    patterns.addModifyListener(listener);
+    includePattern.addModifyListener(listener);
+    excludePattern.addModifyListener(listener);
     licenseFile.addModifyListener(listener);
   }
 
@@ -205,8 +214,10 @@ public class CopyrightSettingsPage extends WizardPage {
       if ( cp != null ) {
         cp.setHeaderText(header);
       }
-  	} else if ( widget == patterns ) {
-      settings.setPattern(patterns.getText().trim());
+  	} else if ( widget == includePattern ) {
+      settings.setIncludePattern(includePattern.getText().trim());
+  	} else if ( widget == excludePattern ) {
+      settings.setExcludePattern(excludePattern.getText().trim());
     } else if ( widget == licenseFile ) {
       settings.setLicenseFile(licenseFile.getText().trim());
     }
