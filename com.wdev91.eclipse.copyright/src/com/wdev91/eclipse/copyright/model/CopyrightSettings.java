@@ -18,6 +18,8 @@ public class CopyrightSettings {
   public static final int OVERRIDE_TEXT = 1;
   public static final int OVERRIDE_ALL = 2;
 
+  public static final String DEFAULT_INCLUDE_PATTERN = "*";
+
   /** Selected projects */
   protected IProject[] projects;
   /** Pattern for resources filtering */
@@ -48,7 +50,7 @@ public class CopyrightSettings {
   }
 
   public String getPattern() {
-    return pattern;
+    return pattern != null && pattern.length() > 0 ? pattern : DEFAULT_INCLUDE_PATTERN;
   }
 
   public IProject[] getProjects() {
@@ -90,7 +92,7 @@ public class CopyrightSettings {
   }
 
   public void setPattern(String pattern) {
-    this.pattern = pattern;
+    this.pattern = pattern.trim();
     this.changed = true;
   }
 
