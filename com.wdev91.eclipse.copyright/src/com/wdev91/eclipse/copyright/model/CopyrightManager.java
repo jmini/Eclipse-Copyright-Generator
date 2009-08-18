@@ -830,7 +830,11 @@ public class CopyrightManager {
     		throw new CopyrightException(Messages.CopyrightManager_err_savingHeaderTextMissingForProject);
     	}
 
-    	PrintWriter writer = new PrintWriter(getProjectPreferencesFile(project), XML_ENCODING);
+    	if ( ! projectFile.exists() ) {
+    		projectFile.getParentFile().mkdirs();
+    	}
+
+    	PrintWriter writer = new PrintWriter(projectFile, XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_PROOT + '>');
       writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())
