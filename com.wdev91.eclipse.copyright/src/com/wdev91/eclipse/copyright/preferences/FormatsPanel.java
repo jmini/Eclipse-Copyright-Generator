@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.FontData;
@@ -49,6 +50,7 @@ public class FormatsPanel extends Composite {
   private static final String LENGTH_LABEL_PREFIX = "l:"; //$NON-NLS-1$
 
   private TreeViewer contentTypesViewer;
+  private Button excludedButton;
   private Text firstLineText;
   private Text linePrefixText;
   private Text lastLineText;
@@ -71,12 +73,18 @@ public class FormatsPanel extends Composite {
       currentId = contentType.getId();
       HeaderFormat format = headerFormats.get(currentId);
       if ( format != null ) {
-        firstLineText.setText(format.getBeginLine());
-        linePrefixText.setText(format.getLinePrefix());
-        lastLineText.setText(format.getEndLine());
-        postBlankLinesText.setText(Constants.EMPTY_STRING + format.getPostBlankLines());
-        lineFormatButton.setSelection(format.isLineCommentFormat());
-        preserveFirstLineButton.setSelection(format.isPreserveFirstLine());
+      	if ( ! format.isExcluded() ) {
+          firstLineText.setText(format.getBeginLine());
+          linePrefixText.setText(format.getLinePrefix());
+          lastLineText.setText(format.getEndLine());
+          postBlankLinesText.setText(Constants.EMPTY_STRING + format.getPostBlankLines());
+          lineFormatButton.setSelection(format.isLineCommentFormat());
+          preserveFirstLineButton.setSelection(format.isPreserveFirstLine());
+      	} else {
+          clearFields();
+      	}
+      	excludedButton.setSelection(format.isExcluded());
+      	setEnabled(true);
       } else {
         clearFields();
       }
@@ -84,12 +92,14 @@ public class FormatsPanel extends Composite {
   }
 
   private void clearFields() {
+  	excludedButton.setSelection(false);
     firstLineText.setText(Constants.EMPTY_STRING);
     linePrefixText.setText(Constants.EMPTY_STRING);
     lastLineText.setText(Constants.EMPTY_STRING);
     postBlankLinesText.setText("0"); //$NON-NLS-1$
     lineFormatButton.setSelection(false);
     preserveFirstLineButton.setSelection(false);
+    setEnabled(clearButton.isEnabled());
   }
 
   private int convertHorizontalDLUsToPixels(int dlus) {
@@ -128,6 +138,12 @@ public class FormatsPanel extends Composite {
     data.horizontalSpan = 4;
     data.heightHint = (fontData.length > 0 ? fontData[0].getHeight() : 10) * TREE_LINES_NUMBER;
     contentTypesViewer.getControl().setLayoutData(data);
+
+    excludedButton = new Button(this, SWT.CHECK);
+    excludedButton.setText("Exclude this type from copyrights");
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    data.horizontalSpan = 4;
+    excludedButton.setLayoutData(data);
 
     new Label(this, SWT.NONE).setText(Messages.HeadersPreferencePage_labelFirstLine);
     firstLineText = new Text(this, SWT.BORDER);
@@ -201,6 +217,12 @@ public class FormatsPanel extends Composite {
         changeSelection();
       }
     });
+    excludedButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setEnabled(true);
+			}
+    });
     clearButton.addSelectionListener(new SelectionListener() {
       public void widgetDefaultSelected(SelectionEvent e) {
       }
@@ -233,13 +255,15 @@ public class FormatsPanel extends Composite {
   private void saveCurrentFormat() {
     if ( currentId == null ) return;
 
+    boolean ex = excludedButton.getSelection();
     String fl = firstLineText.getText();
     String lp = linePrefixText.getText();
     String ll = lastLineText.getText();
     String bl = postBlankLinesText.getText().trim();
     boolean lf = lineFormatButton.getSelection();
     boolean pf = preserveFirstLineButton.getSelection();
-    if ( fl.trim().length() + lp.trim().length() + ll.trim().length() == 0 && ! lf && ! pf ) {
+    if ( ! ex && ! lf && ! pf
+    		 && fl.trim().length() + lp.trim().length() + ll.trim().length() == 0 ) {
       headerFormats.remove(currentId);
     } else {
       HeaderFormat format = headerFormats.get(currentId);
@@ -247,24 +271,29 @@ public class FormatsPanel extends Composite {
         format = new HeaderFormat(currentId);
         headerFormats.put(currentId, format);
       }
-      format.setBeginLine(fl);
-      format.setLinePrefix(lp);
-      format.setEndLine(ll);
-      format.setPostBlankLines(bl.length() > 0 ? Math.abs(Integer.parseInt(bl)) : 0);
-      format.setLineCommentFormat(lf);
-      format.setPreserveFirstLine(pf);
+    	format.setExcluded(ex);
+      if ( ! ex ) {
+        format.setBeginLine(fl);
+        format.setLinePrefix(lp);
+        format.setEndLine(ll);
+        format.setPostBlankLines(bl.length() > 0 ? Math.abs(Integer.parseInt(bl)) : 0);
+        format.setLineCommentFormat(lf);
+        format.setPreserveFirstLine(pf);
+      }
     }
   }
 
   @Override
   public void setEnabled(boolean enabled) {
+  	boolean excluded = excludedButton.getSelection();
     contentTypesViewer.getControl().setEnabled(enabled);
-    firstLineText.setEnabled(enabled);
-    linePrefixText.setEnabled(enabled);
-    lastLineText.setEnabled(enabled);
-    postBlankLinesText.setEnabled(enabled);
-    lineFormatButton.setEnabled(enabled);
-    preserveFirstLineButton.setEnabled(enabled);
+    excludedButton.setEnabled(enabled);
+    firstLineText.setEnabled(enabled && ! excluded);
+    linePrefixText.setEnabled(enabled && ! excluded);
+    lastLineText.setEnabled(enabled && ! excluded);
+    postBlankLinesText.setEnabled(enabled && ! excluded);
+    lineFormatButton.setEnabled(enabled && ! excluded);
+    preserveFirstLineButton.setEnabled(enabled && ! excluded);
     clearButton.setEnabled(enabled);
   }
 

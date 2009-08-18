@@ -103,6 +103,7 @@ public class CopyrightManager {
   private static final String ATT_LINEFORMAT = "lineFormat"; //$NON-NLS-1$
   private static final String ATT_PRESERVEFIRST = "preserveFirstLine"; //$NON-NLS-1$
   private static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
+  private static final String ATT_EXCLUDED = "excluded"; //$NON-NLS-1$
 
   /** The repository root directory */
   private static File repository;
@@ -545,6 +546,13 @@ public class CopyrightManager {
         HeaderFormat format = (settings.getOverride() != CopyrightSettings.OVERRIDE_ALL)
                               ? getHeaderFormat(file.getProject(), ct)
                               : getHeaderFormat(ct);
+        if ( format == null ) {
+        	// No format defined for this content type or its parents
+        	return false;
+        } else if ( format.isExcluded() ) {
+        	// Content type excluded from copyright
+        	return false;
+        }
         reader = new BufferedReader(new InputStreamReader(file.getContents()));
         String line = reader.readLine();
         if ( line != null && format.preserveFirstLine ) {
@@ -685,21 +693,26 @@ public class CopyrightManager {
     for (int i = 0; i < nodes.getLength(); i++) {
       Element elt = (Element) nodes.item(i);
       HeaderFormat format = new HeaderFormat(elt.getAttribute(ATT_CONTENTID));
-      String pbl = elt.getAttribute(ATT_POSTBLANKLINES);
-      format.setPostBlankLines(Constants.EMPTY_STRING.equals(pbl) ? 0 : Integer.parseInt(pbl));
-      format.setLineCommentFormat(Boolean.parseBoolean(elt.getAttribute(ATT_LINEFORMAT)));
-      format.setPreserveFirstLine(Boolean.parseBoolean(elt.getAttribute(ATT_PRESERVEFIRST)));
-      Node n = elt.getElementsByTagName(TAG_BEGIN).item(0).getFirstChild();
-      if ( n != null && n instanceof CDATASection ) {
-        format.setBeginLine(((CDATASection) n).getTextContent());
-      }
-      n = elt.getElementsByTagName(TAG_PREFIX).item(0).getFirstChild();
-      if ( n != null && n instanceof CDATASection ) {
-        format.setLinePrefix(((CDATASection) n).getTextContent());
-      }
-      n = elt.getElementsByTagName(TAG_END).item(0).getFirstChild();
-      if ( n != null && n instanceof CDATASection ) {
-        format.setEndLine(((CDATASection) n).getTextContent());
+      String excluded = elt.getAttribute(ATT_EXCLUDED);
+      if ( "true".equalsIgnoreCase(excluded) ) { //$NON-NLS-1$
+      	format.setExcluded(true);
+      } else {
+        String pbl = elt.getAttribute(ATT_POSTBLANKLINES);
+        format.setPostBlankLines(Constants.EMPTY_STRING.equals(pbl) ? 0 : Integer.parseInt(pbl));
+        format.setLineCommentFormat(Boolean.parseBoolean(elt.getAttribute(ATT_LINEFORMAT)));
+        format.setPreserveFirstLine(Boolean.parseBoolean(elt.getAttribute(ATT_PRESERVEFIRST)));
+        Node n = elt.getElementsByTagName(TAG_BEGIN).item(0).getFirstChild();
+        if ( n != null && n instanceof CDATASection ) {
+          format.setBeginLine(((CDATASection) n).getTextContent());
+        }
+        n = elt.getElementsByTagName(TAG_PREFIX).item(0).getFirstChild();
+        if ( n != null && n instanceof CDATASection ) {
+          format.setLinePrefix(((CDATASection) n).getTextContent());
+        }
+        n = elt.getElementsByTagName(TAG_END).item(0).getFirstChild();
+        if ( n != null && n instanceof CDATASection ) {
+          format.setEndLine(((CDATASection) n).getTextContent());
+        }
       }
       formats.add(format);
     }
@@ -764,18 +777,24 @@ public class CopyrightManager {
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_HROOT + '>');
       for (HeaderFormat format : formats) {
-        writer.println("\t<" + TAG_HEADER
-                       + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
-                       + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
-                       + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
-                       + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
-        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
-        							 + "]]></" + TAG_BEGIN + '>');
-        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
-        							 + "]]></" + TAG_PREFIX + '>');
-        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
-        							 + "]]></" + TAG_END + '>');
-        writer.println("\t</" + TAG_HEADER + '>');
+      	if ( format.isExcluded() ) {
+          writer.println("\t<" + TAG_HEADER
+          							 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+          							 + ATT_EXCLUDED + "=\"true\" />");
+      	} else {
+          writer.println("\t<" + TAG_HEADER
+              					 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+              					 + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
+              					 + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
+              					 + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
+          writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
+   											 + "]]></" + TAG_BEGIN + '>');
+          writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
+												 + "]]></" + TAG_PREFIX + '>');
+          writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
+												 + "]]></" + TAG_END + '>');
+          writer.println("\t</" + TAG_HEADER + '>');
+      	}
       }
       writer.println("</" + TAG_HROOT + '>');
       writer.flush();
@@ -817,18 +836,24 @@ public class CopyrightManager {
       writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())
       							 + "]]></" + TAG_COPYRIGHT + '>');
       for (HeaderFormat format : preferences.getFormats().values()) {
-        writer.println("\t<" + TAG_HEADER
-                       + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
-                       + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
-                       + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
-                       + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
-        writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
-        							 + "]]></" + TAG_BEGIN + '>');
-        writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
-        							 + "]]></" + TAG_PREFIX + '>');
-        writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
-        							 + "]]></" + TAG_END + '>');
-        writer.println("\t</" + TAG_HEADER + '>');
+      	if ( format.isExcluded() ) {
+        	writer.println("\t<" + TAG_HEADER
+        								 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+              					 + ATT_EXCLUDED + "=\"true\" />");
+      	} else {
+        	writer.println("\t<" + TAG_HEADER
+              					 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+              					 + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
+              					 + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
+              					 + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
+        	writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
+												 + "]]></" + TAG_BEGIN + '>');
+        	writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
+        								 + "]]></" + TAG_PREFIX + '>');
+        	writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
+        								 + "]]></" + TAG_END + '>');
+        	writer.println("\t</" + TAG_HEADER + '>');
+      	}
       }
       writer.println("</" + TAG_PROOT + '>');
       writer.flush();

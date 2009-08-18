@@ -23,6 +23,7 @@ public class HeaderFormat {
   public static final HeaderFormat XML_HEADER;
 
   protected String contentId;
+  protected boolean excluded;
   protected boolean lineCommentFormat = true;
   protected String beginLine;
   protected String endLine;
@@ -32,21 +33,21 @@ public class HeaderFormat {
 
   static {
     TEXT_HEADER = new HeaderFormat(
-        IContentTypeManager.CT_TEXT,
+        IContentTypeManager.CT_TEXT, false,
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
         "# ", //$NON-NLS-1$
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
         0, true, false);
 
     JAVA_HEADER = new HeaderFormat(
-        CT_JAVA,
+        CT_JAVA, false,
         "/*******************************************************************************", //$NON-NLS-1$
         " * ", //$NON-NLS-1$
         " ******************************************************************************/", //$NON-NLS-1$
         0, false, false);
 
     XML_HEADER = new HeaderFormat(
-        CT_XML,
+        CT_XML, false,
         "<!------------------------------------------------------------------------------", //$NON-NLS-1$
         "  ", //$NON-NLS-1$
         "------------------------------------------------------------------------------->", //$NON-NLS-1$
@@ -57,10 +58,11 @@ public class HeaderFormat {
     this.contentId = contentId;
   }
 
-  private HeaderFormat(String contentId, String beginLine, String linePrefix,
-      String endLine, int postBlankLines, boolean lineCommentFormat,
-      boolean preserveFirstLine) {
+  private HeaderFormat(String contentId, boolean excluded, String beginLine,
+  		String linePrefix, String endLine, int postBlankLines,
+  		boolean lineCommentFormat, boolean preserveFirstLine) {
     this.contentId = contentId;
+    this.excluded = excluded;
     this.beginLine = beginLine;
     this.linePrefix = linePrefix;
     this.endLine = endLine;
@@ -71,12 +73,16 @@ public class HeaderFormat {
 
   @Override
   protected Object clone() {
-    return new HeaderFormat(this.contentId, this.beginLine, this.linePrefix,
-                            this.endLine, this.postBlankLines,
+    return new HeaderFormat(this.contentId, this.excluded, this.beginLine,
+    												this.linePrefix, this.endLine, this.postBlankLines,
                             this.lineCommentFormat, this.preserveFirstLine);
   }
 
-  public boolean isLineCommentFormat() {
+  public boolean isExcluded() {
+		return excluded;
+	}
+
+	public boolean isLineCommentFormat() {
     return lineCommentFormat;
   }
 
@@ -104,7 +110,11 @@ public class HeaderFormat {
     return preserveFirstLine;
   }
 
-  public void setLineCommentFormat(boolean lineCommentFormat) {
+  public void setExcluded(boolean excluded) {
+		this.excluded = excluded;
+	}
+
+	public void setLineCommentFormat(boolean lineCommentFormat) {
     this.lineCommentFormat = lineCommentFormat;
   }
 

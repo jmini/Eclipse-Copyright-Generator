@@ -134,8 +134,9 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
   	if ( enableButton.getSelection() ) {
     	Collection<HeaderFormat> headerFormats = formats.getFormats();
       for (HeaderFormat format : headerFormats) {
-        if ( format.getBeginLine().trim().length() == 0
-             || format.getEndLine().trim().length() == 0 ) {
+        if ( ! format.isExcluded()
+        		 && ( format.getBeginLine().trim().length() == 0
+                  || format.getEndLine().trim().length() == 0 ) ) {
           MessageDialog.openError(getShell(), Messages.ProjectCopyrightPreferencePage_errTitle,
                                   NLS.bind(Messages.HeadersPreferencePage_errorInvalidHeaderFormat,
                                       Platform.getContentTypeManager()
