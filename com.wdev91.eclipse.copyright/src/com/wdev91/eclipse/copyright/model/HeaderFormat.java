@@ -78,6 +78,12 @@ public class HeaderFormat {
                             this.lineCommentFormat, this.preserveFirstLine);
   }
 
+  static HeaderFormat createExcluded(String contentId) {
+  	HeaderFormat format = new HeaderFormat(contentId);
+  	format.setExcluded(true);
+  	return format;
+  }
+
   public boolean isExcluded() {
 		return excluded;
 	}

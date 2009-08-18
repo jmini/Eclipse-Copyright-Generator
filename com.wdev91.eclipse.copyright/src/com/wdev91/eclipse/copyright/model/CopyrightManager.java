@@ -679,6 +679,33 @@ public class CopyrightManager {
     if ( contentTypeManager.getContentType(HeaderFormat.CT_JAVA) != null ) {
       headerFormats.put(HeaderFormat.CT_JAVA, HeaderFormat.JAVA_HEADER);
     }
+
+    String[] excludedContentIds = new String[] {
+    	"org.eclipse.ant.core.antBuildFile",
+    	"org.eclipse.jdt.core.JARManifest",
+    	"org.eclipse.ui.views.log.log"
+    };
+    for (String contentId : excludedContentIds) {
+    	IContentType contentType = contentTypeManager.getContentType(contentId);
+    	if ( contentType != null ) {
+    		headerFormats.put(contentId, HeaderFormat.createExcluded(contentId));
+    	}
+    }
+    String[] excludedPlugins = new String[] {
+      	"org.eclipse.jst.j2ee",
+      	"org.eclipse.pde"
+    };
+    for (String pluginId : excludedPlugins) {
+      for (IContentType contentType : contentTypeManager.getAllContentTypes()) {
+      	String contentId = contentType.getId();
+      	int i = contentId.lastIndexOf('.');
+      	if ( contentId.substring(0, i).equals(pluginId) ) {
+      		headerFormats.put(contentId, HeaderFormat.createExcluded(contentId));
+      	}
+      }
+    }
+
+    saveFormats(headerFormats.values());
   }
 
   /**
