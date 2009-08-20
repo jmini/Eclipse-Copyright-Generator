@@ -84,7 +84,14 @@ public class HeaderFormat {
   	return format;
   }
 
-  public boolean isExcluded() {
+  @Override
+	public boolean equals(Object obj) {
+		return (obj instanceof HeaderFormat)
+					 ? ((HeaderFormat) obj).getContentId().equals(this.contentId)
+					 : false;
+	}
+
+	public boolean isExcluded() {
 		return excluded;
 	}
 
@@ -143,4 +150,9 @@ public class HeaderFormat {
   public void setPreserveFirstLine(boolean preserveFirstLine) {
     this.preserveFirstLine = preserveFirstLine;
   }
+
+	@Override
+	public String toString() {
+		return this.getContentId();
+	}
 }

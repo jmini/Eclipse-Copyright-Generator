@@ -35,6 +35,10 @@ public class CopyrightsInput {
     return copyrights.remove(copyright);
   }
 
+  public void defaults() {
+  	copyrights = CopyrightManager.getDefaultCopyrights();
+  }
+
   public boolean exists(String label) {
     for (Copyright c : copyrights) {
       if ( c.getLabel().equalsIgnoreCase(label) ) {

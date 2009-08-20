@@ -302,5 +302,6 @@ public class FormatsPanel extends Composite {
     for (HeaderFormat f : formats) {
       headerFormats.put(f.getContentId(), f);
     }
+    changeSelection();
   }
 }

@@ -32,7 +32,6 @@ public class HeadersPreferencePage extends PreferencePage implements
 
   public HeadersPreferencePage() {
     super();
-    noDefaultAndApplyButton();
   }
 
   @Override
@@ -46,7 +45,13 @@ public class HeadersPreferencePage extends PreferencePage implements
   public void init(IWorkbench workbench) {
   }
 
-  @Override
+	@Override
+	protected void performDefaults() {
+		formats.setFormats(CopyrightManager.getDefaultHeadersFormats());
+		super.performDefaults();
+	}
+
+	@Override
   public boolean performOk() {
     Collection<HeaderFormat> headerFormats = formats.getFormats();
     for (HeaderFormat format : headerFormats) {

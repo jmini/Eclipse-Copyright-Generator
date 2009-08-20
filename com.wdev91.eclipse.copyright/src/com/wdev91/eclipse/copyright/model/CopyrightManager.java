@@ -12,7 +12,7 @@ package com.wdev91.eclipse.copyright.model;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -105,8 +105,6 @@ public class CopyrightManager {
   private static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
   private static final String ATT_EXCLUDED = "excluded"; //$NON-NLS-1$
 
-  /** The repository root directory */
-  private static File repository;
   /** File containing the headers definitions. */
   private static File headersFile;
   /** Eclipse content types manager */
@@ -355,6 +353,69 @@ public class CopyrightManager {
   }
 
   /**
+   * Returns the list of default copyrights stored in the plugin, bases on
+   * standard open source licenses.
+   * 
+   * @return List of default copyrights
+   */
+  public static List<Copyright> getDefaultCopyrights() {
+    URL url = Activator.getDefault()
+    									 .getBundle()
+    									 .getResource(REPOSITORY_FILENAME);
+    try {
+			return readCopyrights(url.openStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ArrayList<Copyright>();
+		}
+  }
+
+  /**
+   * Returns the default headers formats. Defaults are used to initialize the
+   * Eclipse preferences the first time the plugin is used. They can be
+   * restored if needed from the preference page.
+   * 
+   * @return List of default formats
+   */
+  public static List<HeaderFormat> getDefaultHeadersFormats() {
+    List<HeaderFormat> formats = new ArrayList<HeaderFormat>();
+
+    // If here, no file found. Then load the defaults.
+    formats.add((HeaderFormat) HeaderFormat.TEXT_HEADER.clone());
+    formats.add((HeaderFormat) HeaderFormat.XML_HEADER.clone());
+    if ( contentTypeManager.getContentType(HeaderFormat.CT_JAVA) != null ) {
+    	formats.add((HeaderFormat) HeaderFormat.JAVA_HEADER.clone());
+    }
+
+    String[] excludedContentIds = new String[] {
+    	"org.eclipse.ant.core.antBuildFile",
+    	"org.eclipse.jdt.core.JARManifest",
+    	"org.eclipse.ui.views.log.log"
+    };
+    for (String contentId : excludedContentIds) {
+    	IContentType contentType = contentTypeManager.getContentType(contentId);
+    	if ( contentType != null ) {
+    		formats.add(HeaderFormat.createExcluded(contentId));
+    	}
+    }
+    String[] excludedPlugins = new String[] {
+      	"org.eclipse.jst.j2ee",
+      	"org.eclipse.pde"
+    };
+    for (String pluginId : excludedPlugins) {
+      for (IContentType contentType : contentTypeManager.getAllContentTypes()) {
+      	String contentId = contentType.getId();
+      	int i = contentId.lastIndexOf('.');
+      	if ( contentId.substring(0, i).equals(pluginId) ) {
+      		formats.add(HeaderFormat.createExcluded(contentId));
+      	}
+      }
+    }
+
+    return formats;
+  }
+
+  /**
    * Returns the file containing the headers definitions. This file is
    * located in the workspace in the state directory of the plugin.
    * 
@@ -484,17 +545,17 @@ public class CopyrightManager {
     return new File(projectSettings, Activator.PLUGIN_ID + ".xml"); //$NON-NLS-1$
   }
 
+  /**
+   * Returns the File used to store copyrights definitions in the workspace.
+   * 
+   * @return File
+   * @throws IOException
+   */
   private static File getRepositoryFile() throws IOException {
-    if ( repository == null ) {
-      repository = Activator.getDefault()
-                            .getStateLocation()
-                            .append(REPOSITORY_FILENAME)
-                            .toFile();
-      if ( ! repository.exists() ) {
-        loadDefaultFile();
-      }
-    }
-    return repository;
+  	return Activator.getDefault()
+                    .getStateLocation()
+                    .append(REPOSITORY_FILENAME)
+                    .toFile();
   }
 
   /**
@@ -580,7 +641,7 @@ public class CopyrightManager {
   }
 
   /**
-   * Returns list of copyright readed from the XML store file, if it is present
+   * Returns list of copyrights readed from the XML store file, if it is present
    * in the workspace. If no store file can be found, an empty list is returned.
    * 
    * If the custom parameter is set to true, a CUSTOM copyright entry is added
@@ -590,64 +651,21 @@ public class CopyrightManager {
    * @return List of copyrights (can be empty).
    */
   public static List<Copyright> listCopyrights(boolean custom) {
-    List<Copyright> copyrights = new ArrayList<Copyright>();
     try {
+      List<Copyright> copyrights;
       File xmlFile = getRepositoryFile();
       if ( xmlFile.exists() ) {
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse(xmlFile);
-        Element elt = doc.getDocumentElement();
-        NodeList nodes = elt.getElementsByTagName(TAG_COPYRIGHT);
-        for (int i = 0; i < nodes.getLength(); i++) {
-          elt = (Element) nodes.item(i);
-          Copyright c = new Copyright(elt.getAttribute(ATT_LABEL));
-          Node n = elt.getElementsByTagName(TAG_HEADER).item(0).getFirstChild();
-          if ( n != null && n instanceof CDATASection ) {
-            c.setHeaderText(((CDATASection) n).getTextContent());
-          }
-          n = elt.getElementsByTagName(TAG_LICENSE).item(0);
-          c.setLicenseFilename(((Element) n).getAttribute(ATT_FILENAME));
-          n = n.getFirstChild();
-          if ( n != null && n instanceof CDATASection ) {
-            c.setLicenseText(((CDATASection) n).getTextContent());
-          }
-          copyrights.add(c);
-        }
+      	copyrights = readCopyrights(new FileInputStream(xmlFile));
+      } else {
+      	copyrights = getDefaultCopyrights();
       }
+      if ( custom ) {
+        copyrights.add(0, CUSTOM);
+      }
+      return copyrights;
     } catch (Exception e) {
       e.printStackTrace();
-    }
-    if ( custom ) {
-      copyrights.add(0, CUSTOM);
-    }
-    return copyrights;
-  }
-
-  /**
-   * Creates a repository file with the default copyrights contained in the
-   * plugin. This method is used only one time, at the first use of the plugin
-   * to initialize the workspace preferences with standard open source
-   * licenses.
-   */
-  private static void loadDefaultFile() {
-    try {
-      byte[] buffer = new byte[2048];
-      URL url = Activator.getDefault()
-                         .getBundle()
-                         .getResource(REPOSITORY_FILENAME);
-      InputStream input = url.openStream();
-      FileOutputStream output = new FileOutputStream(repository);
-      while (true) {
-        int read = input.read(buffer);
-        if ( read == -1 ) {
-          break;
-        }
-        output.write(buffer, 0, read);
-      }
-      output.close();
-      input.close();
-    } catch (Exception e) {
-      e.printStackTrace();
+      return new ArrayList<Copyright>(0);
     }
   }
 
@@ -674,38 +692,11 @@ public class CopyrightManager {
     }
 
     // If here, no file found. Then load the defaults.
-    headerFormats.put(IContentTypeManager.CT_TEXT, HeaderFormat.TEXT_HEADER);
-    headerFormats.put(HeaderFormat.CT_XML, HeaderFormat.XML_HEADER);
-    if ( contentTypeManager.getContentType(HeaderFormat.CT_JAVA) != null ) {
-      headerFormats.put(HeaderFormat.CT_JAVA, HeaderFormat.JAVA_HEADER);
+    Collection<HeaderFormat> formats = getDefaultHeadersFormats();
+    saveFormats(formats);
+    for (HeaderFormat format : formats) {
+    	headerFormats.put(format.getContentId(), format);
     }
-
-    String[] excludedContentIds = new String[] {
-    	"org.eclipse.ant.core.antBuildFile",
-    	"org.eclipse.jdt.core.JARManifest",
-    	"org.eclipse.ui.views.log.log"
-    };
-    for (String contentId : excludedContentIds) {
-    	IContentType contentType = contentTypeManager.getContentType(contentId);
-    	if ( contentType != null ) {
-    		headerFormats.put(contentId, HeaderFormat.createExcluded(contentId));
-    	}
-    }
-    String[] excludedPlugins = new String[] {
-      	"org.eclipse.jst.j2ee",
-      	"org.eclipse.pde"
-    };
-    for (String pluginId : excludedPlugins) {
-      for (IContentType contentType : contentTypeManager.getAllContentTypes()) {
-      	String contentId = contentType.getId();
-      	int i = contentId.lastIndexOf('.');
-      	if ( contentId.substring(0, i).equals(pluginId) ) {
-      		headerFormats.put(contentId, HeaderFormat.createExcluded(contentId));
-      	}
-      }
-    }
-
-    saveFormats(headerFormats.values());
   }
 
   /**
@@ -747,6 +738,40 @@ public class CopyrightManager {
   }
 
   /**
+   * Reads all the copyrights saved in a given XML stream and returns as a List.
+   * 
+   * @param source XML source file
+   * @return List of copyrights
+   */
+  private static List<Copyright> readCopyrights(InputStream source) {
+    List<Copyright> copyrights = new ArrayList<Copyright>();
+    try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(source);
+			Element elt = doc.getDocumentElement();
+			NodeList nodes = elt.getElementsByTagName(TAG_COPYRIGHT);
+			for (int i = 0; i < nodes.getLength(); i++) {
+			  elt = (Element) nodes.item(i);
+			  Copyright c = new Copyright(elt.getAttribute(ATT_LABEL));
+			  Node n = elt.getElementsByTagName(TAG_HEADER).item(0).getFirstChild();
+			  if ( n != null && n instanceof CDATASection ) {
+			    c.setHeaderText(((CDATASection) n).getTextContent());
+			  }
+			  n = elt.getElementsByTagName(TAG_LICENSE).item(0);
+			  c.setLicenseFilename(((Element) n).getAttribute(ATT_FILENAME));
+			  n = n.getFirstChild();
+			  if ( n != null && n instanceof CDATASection ) {
+			    c.setLicenseText(((CDATASection) n).getTextContent());
+			  }
+			  copyrights.add(c);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    return copyrights;
+  }
+
+  /**
    * Saves a collection of copyright definitions in the workspace preferences.
    * The definitions are stored in the repository file. All definitions
    * present in the repository are replaced.
@@ -769,7 +794,12 @@ public class CopyrightManager {
 
   	// Save of the copyrights in the XML store file
   	try {
-      PrintWriter writer = new PrintWriter(getRepositoryFile(), XML_ENCODING);
+  		File xmlFile = getRepositoryFile();
+  		if ( ! xmlFile.exists() ) {
+  			xmlFile.getParentFile().mkdirs();
+  		}
+
+  		PrintWriter writer = new PrintWriter(xmlFile, XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_CROOT + '>');
       for (Copyright cp : copyrights) {
@@ -939,7 +969,7 @@ public class CopyrightManager {
   private static CopyrightSelectionItem[] selectResources(IContainer parent,
       StringMatcher[] includeMatchers, StringMatcher[] excludeMatchers,
       CopyrightSettings settings, IProgressMonitor monitor)
-  throws CoreException, CopyrightException {
+  		throws CoreException, CopyrightException {
     List<CopyrightSelectionItem> membersSelection = new ArrayList<CopyrightSelectionItem>();
     IResource[] members = parent.members();
     for (IResource member : members) {
