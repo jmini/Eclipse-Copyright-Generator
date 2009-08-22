@@ -144,13 +144,15 @@ public class CopyrightManager {
 
     monitor.beginTask(Messages.CopyrightManager_taskName, settings.getFiles().length);
     try {
-      Map<String, String> parameters = new HashMap<String, String>();
+    	String user = System.getProperty("user.name"); //$NON-NLS-1$
+    	String owner = Activator.getDefault()
+      												 .getPreferenceStore()
+      												 .getString(Constants.PREFERENCES_OWNER);
+    	Map<String, String> parameters = new HashMap<String, String>();
       parameters.put(Constants.P_YEAR, Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
       parameters.put(Constants.P_USER, System.getProperty("user.name")); //$NON-NLS-1$
       parameters.put(Constants.P_OWNER,
-                     Activator.getDefault()
-                              .getPreferenceStore()
-                              .getString(Constants.PREFERENCES_OWNER));
+                     owner.length() > 0 ? owner : user);
 
       // Creates the license files in the selected projects
       String filename = settings.getLicenseFile();
