@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Constants;
@@ -51,6 +52,7 @@ import com.wdev91.eclipse.copyright.viewers.CopyrightsComparator;
 
 public class CopyrightPreferencePage extends PreferencePage
     implements IWorkbenchPreferencePage {
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_copyright";
   private static final int LIST_LINES_NUMBER = 10;
 
   protected Text ownerText;
@@ -224,6 +226,7 @@ public class CopyrightPreferencePage extends PreferencePage
 
     ownerText.setText(getPreferenceStore().getString(Constants.PREFERENCES_OWNER));
     updateContent();
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, CONTEXT_ID);
     return top;
   }
 

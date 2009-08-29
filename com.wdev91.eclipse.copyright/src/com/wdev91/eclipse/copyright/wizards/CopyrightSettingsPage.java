@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.PlatformUI;
 
 import com.wdev91.eclipse.copyright.Constants;
 import com.wdev91.eclipse.copyright.Messages;
@@ -143,6 +144,7 @@ public class CopyrightSettingsPage extends WizardPage {
 
     createListeners();
     copyrightType.setSelection(new StructuredSelection(CopyrightManager.CUSTOM));
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(top, ApplyCopyrightWizard.CONTEXT_ID);
     setPageComplete(false);
     setControl(top);
   }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+   <context id="prefs_copyright" title="Preferences - Copyright">
+      <description>Copyright preference page</description>
+      <topic href="help/prefs_copyright.html" label="Preferences - Copyright"/>
+   </context>
+   <context id="prefs_formats" title="Preferences - Headers formats">
+      <description>Headers formats preference page</description>
+      <topic href="help/prefs_formats.html" label="Preferences - Headers formats"/>
+   </context>
+   <context id="prefs_project" title="Project copyright properties">
+      <description>Project copyright property page</description>
+      <topic href="help/prefs_project.html" label="Project copyright properties"/>
+   </context>
+   <context id="wizard" title="Copyright wizard">
+      <description>Copyright wizard</description>
+      <topic href="help/wizard.html" label="Copyright wizard"/>
+   </context>
+</contexts>

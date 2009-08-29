@@ -22,13 +22,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
 import com.wdev91.eclipse.copyright.model.CopyrightSettings;
 
 public class ApplyCopyrightWizard extends Wizard {
-  protected ProjectSelectionWizardPage projectsPage;
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".wizard";
+
+	protected ProjectSelectionWizardPage projectsPage;
   protected CopyrightSettingsPage settingsPage;
   protected ResourcesSelectionPage selectionPage;
   protected CopyrightSettings settings;

@@ -21,14 +21,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
+import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
 import com.wdev91.eclipse.copyright.model.HeaderFormat;
 
 public class HeadersPreferencePage extends PreferencePage implements
     IWorkbenchPreferencePage {
-  private FormatsPanel formats;
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_formats";
+
+	private FormatsPanel formats;
 
   public HeadersPreferencePage() {
     super();
@@ -39,6 +43,7 @@ public class HeadersPreferencePage extends PreferencePage implements
     formats = new FormatsPanel(parent, SWT.NONE);
     formats.setFormats(CopyrightManager.getHeadersFormats());
 
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, CONTEXT_ID);
     return formats;
   }
 

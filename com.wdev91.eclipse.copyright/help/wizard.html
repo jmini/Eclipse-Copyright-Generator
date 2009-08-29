@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Copyright Wizard</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="wdev91.css" type="text/css" />
+</head>
+<body>
+<h1>Copyright wizard</h1>
+<!-- Include user guide here -->
+<p>
+The wizard is launched from the menu: <strong>Project -&gt; Copyright Wizard...</strong>
+</p>
+<img class="screenshot" src="images/copywiz/guide01.png" />
+<h2>First page - Projects selection</h2>
+<p>
+The first page of the wizard lets you select one or more projects on which to
+apply the copyright.
+</p>
+<img class="screenshot" src="images/copywiz/guide02.png" />
+<div id="table1">
+  <table cellspacing="0">
+    <tr><th width="80">Parameter</th><th>Description</th></tr>
+    <tr>
+      <td>Projects selection list</td>
+      <td>
+      Projects having copyright settings are marked in the selection list by a
+      "(C)" postfix on the projet name.
+      </td>
+    </tr>
+    <tr>
+      <td>Override projects copyright settings</td>
+      <td>
+      If checked, all projects copyright settings (headers text and formats)
+      defined on selected projects will be override by the settings defined
+      in the following page of the wizard.
+      </td>
+    </tr>
+    <tr>
+      <td>Override only the header comment text</td>
+      <td>
+      This checkbox is enabled only if the previous one is checked.<br/>
+      If checked, the override of project copyright settings is limited to the
+      header comment text. All the header formats defined in the projects
+      preferences will be used by the wizard for the corresponding projects.
+      </td>
+    </tr>
+  </table>
+</div>
+<h2>Second page - Copyright parameters</h2>
+<p>
+The second page of the wizard lets you define the parameters of copyright to
+be applied to the selected projects.<br/>
+It is possible to define a completely specific copyright, or select a
+preconfigured copyright in the preferences of the wizard.
+</p>
+<img class="screenshot" src="images/copywiz/guide03.png" />
+<div id="table1">
+  <table cellspacing="0">
+    <tr><th width="80">Parameter</th><th>Description</th></tr>
+    <tr>
+      <td>Copyright type</td>
+      <td>
+      Selection list of copyright to apply. This list allows you to select one
+      of the preconfigured copyrights in the preferences, or to choose the
+      definition of a specific copyright (--- Custom copyright ---).<br/>
+      <img class="screenshot" src="images/copywiz/guide04.png" />
+      </td>
+    </tr>
+    <tr>
+      <td>Copyright header text</td>
+      <td>
+      Text of comment header to be applied to the selected files. This field
+      is pre-initialized with the text defined in preferences for the selected
+      copyright. It may, however, be changed if desired.<br/>
+      <img class="screenshot" src="images/copywiz/guide05.png" /><br/>
+      The text should not contain formatting comment characters.
+      </td>
+    </tr>
+    <tr>
+      <td>File name patterns</td>
+      <td>
+      Patterns of filenames on which apply the comment header. This parameter
+      is <b>mandatory</b>. To select all the resources, set it to "*".<br/>
+      <img class="screenshot" src="images/copywiz/guide06.png" /><br/>
+      </td>
+    </tr>
+    <tr>
+      <td>Replace existing headers</td>
+      <td>
+      This flag is used to indicate whether the wizard will replace the
+      existing header files (checked) or if they should not be modified
+      (unchecked).<br/>
+      The recognition of the existence of a header comment in a file is made
+      by comparing the 5 first characters in the first line of the file (or
+      the second one if the parameter "Do not override the first line" is
+      checked in the corresponding format) with the 5 first characters of the
+      first line defined in the header comment format.
+      </td>
+    </tr>
+    <tr>
+      <td>Add license file if not exists</td>
+      <td>
+      This flag allows you to add to selected projects a license file if no
+      file with the same name already exists.<br/>
+      This parameter is usable only for preconfigured copyrights having a
+      license file defined.
+      </td>
+    </tr>
+    <tr>
+      <td>License file</td>
+      <td>
+      Name and path of the license file to create.<br/>
+      This parameter is used only if the previous parameter has been selected.
+      It is initialized by the file name defined in preferences settings for
+      the selected copyright.
+      </td>
+    </tr>
+  </table>
+</div>
+<h2>Third page - Files selection</h2>
+<p>
+The wizard filters with the files pattern the files on which to apply the
+comment header. If the "Replace existing headers" has been checked, the files
+containing already a comment header are eligible for treatment. Otherwise they
+are also excluded from the pre-selection.
+</p>
+<p>
+The last page of the wizard enables you to refine the selection. It presents
+the files filtered by the wizard.
+</p>
+<img class="screenshot" src="images/copywiz/guide08.png" /><br/>
+<p>
+The user has the possibility to unselect files or directories on which apply
+the comment header.<br/>
+In the previous screenshot, files config.properties and Sample2.java were
+unselected and will therefore not be treated.
+</p>
+<br/><br/>
+<p>
+Finally click on <strong>Finish</strong> to start treatment on the selected files.
+</p>
+<br/><br/>
+Example Java file before treatment:<br/>
+<img class="screenshot" src="images/copywiz/guide09.png" /><br/>
+Example Java file after treatment:<br/>
+<img class="screenshot" src="images/copywiz/guide10.png" /><br/>
+<!-- End of user guide -->
+<br/>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Copyright Wizard</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="wdev91.css" type="text/css" />
+</head>
+<body>
+<h1>Headers formats preference page</h1>
+<!-- Include user guide here -->
+<p>
+The Header formats parameters are used to define the applicable format of
+comment on headers for different types of files. The recognition of the type
+of file is based on the Eclipse ContentType.<br/>
+The formats apply only on the content in text format. If a format is not set
+on a ContentType, it inherits the format of its parent, and so on recursively
+until basic type Text.
+</p>
+<img class="screenshot" src="images/copywiz/config05.png" />
+<p>
+To define a particular format on a file type, select the correspondent
+ContentType in the tree, and enter the definition of the format:
+</p>
+<div id="table1">
+  <table cellspacing="0">
+    <tr><th width="110">Parameter</th><th>Description</th></tr>
+    <tr>
+      <td>Exclude this type from copyrights</td>
+      <td>
+      If checked, all files defined by this ContentType will be automatically
+      excluded by the wizard and will not have a copyright header. All other
+  		fields are then disabled.
+      </td>
+    </tr>
+    <tr>
+      <td>First line</td>
+      <td>
+      Format of the first line of the comment header. Typically this line
+      contains no text and is composed of characters to draw a dividing line.
+      </td>
+    </tr>
+    <tr>
+      <td>Line prefix</td>
+      <td>
+      Format for the beginning of a comment line. This string will be placed by
+      concatenation before all the lines of comment text defined in a text of
+      copyrigt header, including blank lines.
+      </td>
+    </tr>
+    <tr>
+      <td>Last line</td>
+      <td>
+      Format of the last line of the comment header. Typically this line
+      contains no text and is composed of characters to draw a dividing line.
+      </td>
+    </tr>
+    <tr>
+      <td>Line format comment</td>
+      <td>
+      Flag indicating if the comment header is in line format (checked) or
+      block format (unchecked). For a comment in line format, it is important
+      to define a valid "Line prefix" for the target language.
+      </td>
+    </tr>
+    <tr>
+      <td>Do not override the first line</td>
+      <td>
+      Flag indicating whether, when inserting a comment in a file of the
+      selected type, the comment must begin on the first line (unchecked) or
+      on the second line (checked).<br/>
+      Some languages require an instruction or a comment of a particular format
+      on the first line of a source file. When checked, the content of the first
+	  line will be preserved by the wizard.
+      </td>
+    </tr>
+  </table>
+</div>
+<p>
+The labels to the right of the text entry fields indicate the length of the
+current content of the fields. These labels are particularly useful for long
+lines and lines containing spaces at the end.
+</p>
+<p>
+The <strong>Clear</strong> button erases completely the format definition of the selected
+ContentType. It then inherits the format of its parent.
+</p>
+<p>
+The <strong>'Restore Defaults'</strong> button will reload the default formats definitions
+provided with the plug-in. All custom formats will be lost. By default the
+plug-in defines formats for 'Text', 'Java Source File' and 'Xml' content types,
+and excludes 'JAR Manifest File', 'ANT buildfile' and all content types defined
+by PDE and WTP plug-ins.
+</p>
+<!-- End of user guide -->
+<br/>
+</body>
+</html>

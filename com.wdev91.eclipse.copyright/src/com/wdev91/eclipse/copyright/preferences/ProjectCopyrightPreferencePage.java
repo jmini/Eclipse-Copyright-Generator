@@ -33,8 +33,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import com.wdev91.eclipse.copyright.Activator;
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
@@ -42,6 +44,8 @@ import com.wdev91.eclipse.copyright.model.HeaderFormat;
 import com.wdev91.eclipse.copyright.model.ProjectPreferences;
 
 public class ProjectCopyrightPreferencePage extends PropertyPage {
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_project";
+
 	protected IProject project;
 	protected Button enableButton;
   protected Text headerText;
@@ -113,6 +117,7 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
       doEnable(false);
     }
 
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, CONTEXT_ID);
     return top;
   }
 

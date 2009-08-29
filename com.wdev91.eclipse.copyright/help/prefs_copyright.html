@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Copyright Wizard</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="wdev91.css" type="text/css" />
+</head>
+<body>
+<h1>Copyright preference page</h1>
+<!-- Include user guide here -->
+<p>
+The Copyright parameters allow to define a set of standard licenses, defining
+the text to be placed in the comment header of files, as well as a license file
+to add to the projects.
+</p>
+<img class="screenshot" src="images/copywiz/config02.png" />
+<div id="table1">
+  <table cellspacing="0">
+    <tr><th width="80">Parameter</th><th>Description</th></tr>
+    <tr>
+      <td>Owner</td>
+      <td>
+        Sets the value of the substitution variable ${owner}.<br />
+        If not defined, it will take by default the same value that ${user}
+        variable.
+      </td>
+    </tr>
+    <tr>
+      <td>Licenses</td>
+      <td>
+	      List of pre-configured licenses.<br/>
+	      Selecting an item on this list updates the fields in tabs.
+      </td>
+    </tr>
+    <tr>
+      <td>Header text</td>
+      <td>
+        <p>
+	      Tab to define the text of the comment to be placed in the header of
+	      files. This text may contain substitution variables, which will be
+	      replaced by their values at the time of insertion of the comment in
+	      each target file.<br/>
+        The text of the comment is defined line by line. It should not contain
+        comment format characters specific to a file type (eg. /* */).
+        </p>
+	      The usable substitution variables are:
+	      <ul class="list1">
+	        <li>${owner} - Value of the owner parameter</li>
+	        <li>${user} - The OS user name</li>
+	        <li>${year} - The current year</li>
+          <li>${file_name} - Name of the file on which the header is applied</li>
+          <li>${file_absolute_path} - Absolute path of the file on which the header is applied</li>
+          <li>${file_path} - Path of the file on which the header is applied, relative to the project root</li>
+          <li>${project_name} - Name of the project containing the file on which the header is applied</li>
+	      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>License file</td>
+      <td>
+	      Tab to set the (optional) license file to add to the projects.
+      </td>
+    </tr>
+  </table>
+  <p>
+  The <strong>License file</strong> tab allows you to associate a license file to a copyright
+  definition:</p>
+  <img class="screenshot" src="images/copywiz/config03.png" />
+  <table cellspacing="0">
+    <tr><th width="80">Parameter</th><th>Description</th></tr>
+    <tr>
+      <td>File name</td>
+      <td>
+        Default name of the license file. The file name may be changed if
+        desired by the user within the parameters of the wizard.
+      </td>
+    </tr>
+    <tr>
+      <td>File content</td>
+      <td>
+        Text of the license. If the wanted file format is formatted, such as
+        HTML, the text must contain all the formatting tags.<br/>
+        The contents of the file is not interpreted. Then the substitution
+        variables do not apply here.
+      </td>
+    </tr>
+  </table>
+  <p>
+  The plugin is preconfigured with headers and licenses files for 4 open
+  source licenses: Eclipse, Apache, LPG and LGPL.<br/>
+  It is possible to add, change or delete any copyrights with the buttons Add,
+  Modify, and Delete:
+  </p>
+  <ul class="list1">
+    <li>Add - Add a new Copyright. A dialog box opens for the input of the
+    label text under which will be registered the Copyright.<br/>
+    <img class="screenshot" src="images/copywiz/config04.png" /><br/>
+    </li>
+    <li>Modify - Changing the label text of the copyright selected from the
+    list.</li>
+    <li>Delete - Remove the copyright selected from the list.</li>
+  </ul>
+</div>
+<p><br/>
+The <strong>'Restore Defaults'</strong> button will reload the default copyrights
+configuration file provided with the plug-in. All custom texts and copyrights
+will be lost.
+</p>
+<!-- End of user guide -->
+<br/>
+</body>
+</html>

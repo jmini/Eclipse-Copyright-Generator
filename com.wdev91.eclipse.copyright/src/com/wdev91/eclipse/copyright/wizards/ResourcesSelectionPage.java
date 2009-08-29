@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 import com.wdev91.eclipse.copyright.Messages;
 import com.wdev91.eclipse.copyright.model.CopyrightSelectionItem;
@@ -74,6 +75,7 @@ public class ResourcesSelectionPage extends WizardPage {
     selectionReport = new Label(top, SWT.NONE);
     selectionReport.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(top, ApplyCopyrightWizard.CONTEXT_ID);
     setPageComplete(false);
     setControl(top);
   }

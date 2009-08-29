@@ -1,0 +1,122 @@
+body {
+  font: 11px Tahoma, Arial, Helvetica, Verdana;
+  background-color: #FFFFFF;
+  padding: 5px;
+	margin: 0;
+}
+
+/* ---- Content ------------------------------------------------------------ */
+h1 {
+  font: 13px Tahoma, Arial, Helvetica, Verdana;
+	font-weight: bold;
+}
+
+#content {
+	padding: 10px;
+  line-height: 140%;
+}
+
+#title {
+	font: 15px Verdana, "Bitstream Vera Sans", sans-serif;
+	font-weight: bold;
+	letter-spacing: 0.25em;
+	margin-bottom: 15px;
+}
+
+#section {
+	font: 13px Verdana, "Bitstream Vera Sans", sans-serif;
+	font-weight: bold;
+	color: #CC6600;
+  border-bottom: 1px solid #999999;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#section em {
+	color: #000000;
+	font-weight: normal;
+}
+
+#rubrique, h2 {
+  font: 12px Verdana, "Bitstream Vera Sans", sans-serif;
+  font-weight: bold;
+  font-variant: small-caps;
+  color: #7777BB;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#index ol, #index li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  padding: 0px;
+}
+
+a:link, a:active, a:visited {
+	color: #5176B5;
+}
+a:hover {
+	color: #FF4444;
+}
+
+ul.list1 {
+	margin: 0px;
+	padding: 0px;
+/*	list-style-image: url("../images/puce1.png"); */
+}
+
+li {
+	margin-left: 15px;
+	margin-top: 2px;
+	margin-bottom: 5px;
+}
+
+ul.list2 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	list-style-image: url("../images/puce2.png");
+}
+
+ol.list1 {
+  margin: 0px 0px 0px 5px;
+  padding: 0px;
+/*  list-style-image: url("../images/puce1.png"); */
+}
+
+#content p {
+	margin-top: 0px;
+}
+
+#table1 table {
+  border-top: 1px solid #CCCCCC;
+  border-left: 1px solid #CCCCCC;
+  padding: 0px;
+  margin-bottom: 15px;
+}
+
+#table1 th {
+  font: 11px Tahoma, Arial, Helvetica, Verdana;
+  font-weight: bold;
+  border-right: 1px solid #CCCCCC;
+  border-bottom: 1px solid #CCCCCC;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: top;
+}
+
+#table1 td {
+  font: 11px Tahoma, Arial, Helvetica, Verdana;
+  border-right: 1px solid #CCCCCC;
+  border-bottom: 1px solid #CCCCCC;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: top;
+}
+
+img.screenshot {
+  margin-top: 10px;
+	margin-bottom: 20px;
+	margin-left: 10px;
+  border: 1px solid #CCCCCC;
+}
