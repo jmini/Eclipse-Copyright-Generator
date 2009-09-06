@@ -70,7 +70,18 @@ ContentType in the tree, and enter the definition of the format:
       on the second line (checked).<br/>
       Some languages require an instruction or a comment of a particular format
       on the first line of a source file. When checked, the content of the first
-	  line will be preserved by the wizard.
+      line will be preserved by the wizard.
+      </td>
+    </tr>
+    <tr>
+      <td>First line pattern</td>
+      <td>
+      Regular expression pattern to apply on the first line. If the line
+      matches, the comment is inserted after the line, else it is inserted
+      before. This pattern is optional. If it is leaved empty, the first line
+      is always skipped before to insert the comment header.<br/>
+      The regular expression must respect the syntax defined by the Pattern
+      java class.
       </td>
     </tr>
   </table>

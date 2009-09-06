@@ -20,7 +20,7 @@ apply the copyright.
 <img class="screenshot" src="images/copywiz/guide02.png" />
 <div id="table1">
   <table cellspacing="0">
-    <tr><th width="80">Parameter</th><th>Description</th></tr>
+    <tr><th width="110">Parameter</th><th>Description</th></tr>
     <tr>
       <td>Projects selection list</td>
       <td>
@@ -78,11 +78,25 @@ preconfigured copyright in the preferences of the wizard.
       </td>
     </tr>
     <tr>
-      <td>File name patterns</td>
+      <td>Include files</td>
       <td>
-      Patterns of filenames on which apply the comment header. This parameter
-      is <b>mandatory</b>. To select all the resources, set it to "*".<br/>
+      Pattern of filenames on which apply the comment header. If leaved empty,
+      it is equivalent to "*" and all resources will be selected.<br/>
+      It is possible to give several patterns, separated by commas. Then all
+      resources corresponding at least to one of the patterns will be
+      selected.<br/>
       <img class="screenshot" src="images/copywiz/guide06.png" /><br/>
+      </td>
+    </tr>
+    <tr>
+      <td>Exclude files</td>
+      <td>
+      Pattern of filenames to exclude from the selection defined by the
+      include pattern. If leaved empty, there is no exclusion.<br/>
+      It is possible to give several patterns, separated by commas. Then all
+      resources corresponding at least to one of the patterns will be
+      excluded.<br/>
+      <img class="screenshot" src="images/copywiz/guide11.png" /><br/>
       </td>
     </tr>
     <tr>
@@ -120,7 +134,7 @@ preconfigured copyright in the preferences of the wizard.
 </div>
 <h2>Third page - Files selection</h2>
 <p>
-The wizard filters with the files pattern the files on which to apply the
+The wizard filters with the files patterns the files on which to apply the
 comment header. If the "Replace existing headers" has been checked, the files
 containing already a comment header are eligible for treatment. Otherwise they
 are also excluded from the pre-selection.
