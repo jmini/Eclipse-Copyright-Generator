@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.model;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.content.IContentTypeManager;
 
 import com.wdev91.eclipse.copyright.Constants;
@@ -30,6 +32,9 @@ public class HeaderFormat {
   protected String linePrefix = Constants.EMPTY_STRING;
   protected int postBlankLines = 0;
   protected boolean preserveFirstLine = false;
+  protected String firstLinePattern;
+
+  protected Pattern pattern = null;
 
   static {
     TEXT_HEADER = new HeaderFormat(
@@ -37,21 +42,21 @@ public class HeaderFormat {
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
         "# ", //$NON-NLS-1$
         "#-------------------------------------------------------------------------------", //$NON-NLS-1$
-        0, true, false);
+        0, true, false, null);
 
     JAVA_HEADER = new HeaderFormat(
         CT_JAVA, false,
         "/*******************************************************************************", //$NON-NLS-1$
         " * ", //$NON-NLS-1$
         " ******************************************************************************/", //$NON-NLS-1$
-        0, false, false);
+        0, false, false, null);
 
     XML_HEADER = new HeaderFormat(
         CT_XML, false,
         "<!------------------------------------------------------------------------------", //$NON-NLS-1$
         "  ", //$NON-NLS-1$
         "------------------------------------------------------------------------------->", //$NON-NLS-1$
-        0, false, false);
+        0, false, true, "<\\?xml version=.*\\?>"); //$NON-NLS-1$
   }
 
   public HeaderFormat(String contentId) {
@@ -60,7 +65,8 @@ public class HeaderFormat {
 
   private HeaderFormat(String contentId, boolean excluded, String beginLine,
   		String linePrefix, String endLine, int postBlankLines,
-  		boolean lineCommentFormat, boolean preserveFirstLine) {
+  		boolean lineCommentFormat, boolean preserveFirstLine,
+  		String firstLinePattern) {
     this.contentId = contentId;
     this.excluded = excluded;
     this.beginLine = beginLine;
@@ -69,13 +75,15 @@ public class HeaderFormat {
     this.postBlankLines = postBlankLines;
     this.lineCommentFormat = lineCommentFormat;
     this.preserveFirstLine = preserveFirstLine;
+    this.firstLinePattern = firstLinePattern;
   }
 
   @Override
   protected Object clone() {
     return new HeaderFormat(this.contentId, this.excluded, this.beginLine,
     												this.linePrefix, this.endLine, this.postBlankLines,
-                            this.lineCommentFormat, this.preserveFirstLine);
+                            this.lineCommentFormat, this.preserveFirstLine,
+                            this.firstLinePattern);
   }
 
   static HeaderFormat createExcluded(String contentId) {
@@ -111,7 +119,11 @@ public class HeaderFormat {
     return endLine;
   }
 
-  public String getLinePrefix() {
+  public String getFirstLinePattern() {
+		return firstLinePattern;
+	}
+
+	public String getLinePrefix() {
     return linePrefix;
   }
 
@@ -139,7 +151,12 @@ public class HeaderFormat {
     this.endLine = endLine;
   }
 
-  public void setLinePrefix(String linePrefix) {
+  public void setFirstLinePattern(String firstLinePattern) {
+		this.firstLinePattern = firstLinePattern;
+		pattern = null;
+	}
+
+	public void setLinePrefix(String linePrefix) {
     this.linePrefix = linePrefix;
   }
 
@@ -149,9 +166,23 @@ public class HeaderFormat {
 
   public void setPreserveFirstLine(boolean preserveFirstLine) {
     this.preserveFirstLine = preserveFirstLine;
+		pattern = null;
   }
 
-	@Override
+  public boolean skipFirstLine(String line) {
+  	if ( preserveFirstLine ) {
+  		if ( firstLinePattern != null ) {
+  			if ( pattern == null ) {
+  				pattern = Pattern.compile(firstLinePattern);
+  			}
+  			return pattern.matcher(line).matches();
+  		}
+ 			return true;
+  	}
+  	return false;
+  }
+
+  @Override
 	public String toString() {
 		return this.getContentId();
 	}

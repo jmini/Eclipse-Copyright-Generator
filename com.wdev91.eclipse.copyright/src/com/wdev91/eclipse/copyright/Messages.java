@@ -58,6 +58,8 @@ public class Messages extends NLS {
   public static String CopyrightSettingsPage_labelTypes;
   public static String CopyrightSettingsPage_msgPatternsDescr;
   public static String CopyrightSettingsPage_title;
+	public static String FormatsPanel_labelExcludeType;
+	public static String FormatsPanel_labelFirstLinePattern;
   public static String HeadersPreferencePage_buttonClear;
   public static String HeadersPreferencePage_checkLineFormat;
   public static String HeadersPreferencePage_checkPreserveFirstLine;

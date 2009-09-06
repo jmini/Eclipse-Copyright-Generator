@@ -18,7 +18,7 @@ public class CopyrightSettings {
   public static final int OVERRIDE_TEXT = 1;
   public static final int OVERRIDE_ALL = 2;
 
-  public static final String DEFAULT_INCLUDE_PATTERN = "*";
+  public static final String DEFAULT_INCLUDE_PATTERN = "*"; //$NON-NLS-1$
 
   /** Selected projects */
   protected IProject[] projects;

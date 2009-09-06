@@ -30,7 +30,7 @@ import com.wdev91.eclipse.copyright.model.HeaderFormat;
 
 public class HeadersPreferencePage extends PreferencePage implements
     IWorkbenchPreferencePage {
-	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_formats";
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_formats"; //$NON-NLS-1$
 
 	private FormatsPanel formats;
 

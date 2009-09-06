@@ -44,7 +44,7 @@ import com.wdev91.eclipse.copyright.model.HeaderFormat;
 import com.wdev91.eclipse.copyright.model.ProjectPreferences;
 
 public class ProjectCopyrightPreferencePage extends PropertyPage {
-	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_project";
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_project"; //$NON-NLS-1$
 
 	protected IProject project;
 	protected Button enableButton;

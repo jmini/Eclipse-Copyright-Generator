@@ -102,6 +102,7 @@ public class CopyrightManager {
   private static final String ATT_POSTBLANKLINES = "postBlankLines"; //$NON-NLS-1$
   private static final String ATT_LINEFORMAT = "lineFormat"; //$NON-NLS-1$
   private static final String ATT_PRESERVEFIRST = "preserveFirstLine"; //$NON-NLS-1$
+  private static final String TAG_FIRSTLINEPATTERN = "firstLinePattern"; //$NON-NLS-1$
   private static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
   private static final String ATT_EXCLUDED = "excluded"; //$NON-NLS-1$
 
@@ -217,26 +218,28 @@ public class CopyrightManager {
     PrintWriter writer = null;
     FileWriter fw = null;
     String line;
+    String firstLine;
     boolean firstInstructionFinded = false;
 
     try {
       // Gets the header format for the file's content type
       IContentType ct = getContentType(file);
       if ( ct == null ) return;
-      HeaderFormat format = (settings.getOverride() != CopyrightSettings.OVERRIDE_ALL)
-                            ? getHeaderFormat(file.getProject(), ct)
-                            : getHeaderFormat(ct);
+      HeaderFormat format = getHeaderFormat(settings, file, ct);
       String charset = file.getCharset(true);
 
       reader = new BufferedReader(new InputStreamReader(file.getContents(), charset));
       buffer = new StringWriter(new Long(f.length()).intValue());
       writer = new PrintWriter(buffer);
 
+      // Reads the first line of the file
+      firstLine = reader.readLine();
+      if ( firstLine == null ) return;
+
       // Preserves the first line if defined in the header format
-      if ( format.preserveFirstLine ) {
-        line = reader.readLine();
-        if ( line == null ) return;
-        writer.println(line);
+      if ( format.skipFirstLine(firstLine) ) {
+        writer.println(firstLine);
+        firstLine = reader.readLine();
       }
 
       // Gets the copyright header
@@ -267,7 +270,8 @@ public class CopyrightManager {
 
       // Writes the file content, except an optionnaly existing header
       int headerStatus = 0;
-      while ( (line = reader.readLine()) != null ) {
+      line = firstLine;
+      while ( line != null ) {
         switch ( headerStatus ) {
           case 0 :
             if ( line.trim().length() > 0 ) {
@@ -284,7 +288,6 @@ public class CopyrightManager {
               }
             }
             writer.println(line);
-
             break;
           case 1 :
             if ( format.lineCommentFormat ) {
@@ -308,6 +311,7 @@ public class CopyrightManager {
             writer.println(line);
             break;
         }
+        line = reader.readLine();
       }
 
       // Updates the file content
@@ -390,9 +394,9 @@ public class CopyrightManager {
     }
 
     String[] excludedContentIds = new String[] {
-    	"org.eclipse.ant.core.antBuildFile",
-    	"org.eclipse.jdt.core.JARManifest",
-    	"org.eclipse.ui.views.log.log"
+    	"org.eclipse.ant.core.antBuildFile", //$NON-NLS-1$
+    	"org.eclipse.jdt.core.JARManifest", //$NON-NLS-1$
+    	"org.eclipse.ui.views.log.log" //$NON-NLS-1$
     };
     for (String contentId : excludedContentIds) {
     	IContentType contentType = contentTypeManager.getContentType(contentId);
@@ -401,8 +405,8 @@ public class CopyrightManager {
     	}
     }
     String[] excludedPlugins = new String[] {
-      	"org.eclipse.jst.j2ee",
-      	"org.eclipse.pde"
+      	"org.eclipse.jst.j2ee", //$NON-NLS-1$
+      	"org.eclipse.pde" //$NON-NLS-1$
     };
     for (String pluginId : excludedPlugins) {
       for (IContentType contentType : contentTypeManager.getAllContentTypes()) {
@@ -432,6 +436,24 @@ public class CopyrightManager {
                              .toFile();
     }
     return headersFile;
+  }
+
+  /**
+   * Returns the HeaderFormat for a given file, based on wizard settings and
+   * content type of the file. If the OVERRIDE_ALL parameter is setted in the
+   * settings, the format is searched in the copyright properties of the
+   * project containing the file, else or if not found, it is searched in
+   * the general copyright preferences.
+   * 
+   * @param settings Wizard settings
+   * @param file File to search format for
+   * @param ct Content type of the file
+   * @return The appropriated header format for the file.
+   */
+  private static HeaderFormat getHeaderFormat(CopyrightSettings settings, IFile file, IContentType ct) {
+  	return (settings.getOverride() != CopyrightSettings.OVERRIDE_ALL)
+    			 ? getHeaderFormat(file.getProject(), ct)
+    			 : getHeaderFormat(ct);
   }
 
   /**
@@ -606,9 +628,7 @@ public class CopyrightManager {
 
       // Checks if the file already have a header
       if ( ! settings.isForceApply() ) {
-        HeaderFormat format = (settings.getOverride() != CopyrightSettings.OVERRIDE_ALL)
-                              ? getHeaderFormat(file.getProject(), ct)
-                              : getHeaderFormat(ct);
+        HeaderFormat format = getHeaderFormat(settings, file, ct);
         if ( format == null ) {
         	// No format defined for this content type or its parents
         	return false;
@@ -618,7 +638,7 @@ public class CopyrightManager {
         }
         reader = new BufferedReader(new InputStreamReader(file.getContents()));
         String line = reader.readLine();
-        if ( line != null && format.preserveFirstLine ) {
+        if ( line != null && format.skipFirstLine(line) ) {
           line = reader.readLine();   // Read the 2d line if first line must be preserved
         }
         if ( line == null ) {
@@ -732,6 +752,13 @@ public class CopyrightManager {
         n = elt.getElementsByTagName(TAG_END).item(0).getFirstChild();
         if ( n != null && n instanceof CDATASection ) {
           format.setEndLine(((CDATASection) n).getTextContent());
+        }
+        NodeList nl = elt.getElementsByTagName(TAG_FIRSTLINEPATTERN);
+        if ( nl != null && nl.getLength() > 0 ) {
+          n = nl.item(0).getFirstChild();
+          if ( n != null && n instanceof CDATASection ) {
+            format.setFirstLinePattern(((CDATASection) n).getTextContent());
+          }
         }
       }
       formats.add(format);
@@ -852,6 +879,10 @@ public class CopyrightManager {
 												 + "]]></" + TAG_PREFIX + '>');
           writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
 												 + "]]></" + TAG_END + '>');
+          if ( format.getFirstLinePattern() != null ) {
+            writer.println("\t\t<" + TAG_FIRSTLINEPATTERN + "><![CDATA[" + format.getFirstLinePattern()
+            							 + "]]></" + TAG_FIRSTLINEPATTERN + '>');
+          }
           writer.println("\t</" + TAG_HEADER + '>');
       	}
       }
@@ -915,6 +946,10 @@ public class CopyrightManager {
         								 + "]]></" + TAG_PREFIX + '>');
         	writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
         								 + "]]></" + TAG_END + '>');
+          if ( format.getFirstLinePattern() != null ) {
+            writer.println("\t\t<" + TAG_FIRSTLINEPATTERN + "><![CDATA[" + format.getFirstLinePattern()
+            							 + "]]></" + TAG_FIRSTLINEPATTERN + '>');
+          }
         	writer.println("\t</" + TAG_HEADER + '>');
       	}
       }

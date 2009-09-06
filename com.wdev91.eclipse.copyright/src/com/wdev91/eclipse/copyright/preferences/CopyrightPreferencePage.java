@@ -52,7 +52,7 @@ import com.wdev91.eclipse.copyright.viewers.CopyrightsComparator;
 
 public class CopyrightPreferencePage extends PreferencePage
     implements IWorkbenchPreferencePage {
-	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_copyright";
+	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_copyright"; //$NON-NLS-1$
   private static final int LIST_LINES_NUMBER = 10;
 
   protected Text ownerText;
