@@ -475,6 +475,7 @@ public class CopyrightManager {
           headerFormats.put(contentType.getId(), format);
           break;
         }
+        parent = parent.getBaseType();
       }
     }
     return format;
