@@ -262,13 +262,13 @@ public class CopyrightManager {
       }
       writer.println(format.endLine);
 
-      // Add the optionnal blank lines
+      // Add the optional blank lines
       int bl = format.getPostBlankLines();
       for (int i = 0; i < bl; i++) {
         writer.println(Constants.EMPTY_STRING);
       }
 
-      // Writes the file content, except an optionnaly existing header
+      // Writes the file content, except an optionally existing header
       int headerStatus = 0;
       line = firstLine;
       while ( line != null ) {
@@ -501,7 +501,7 @@ public class CopyrightManager {
         while ( parent != null ) {
           format = projectFormats.get(parent.getId());
           if ( format != null ) {
-//            projectFormats.put(contentType.getId(), format);
+            projectFormats.put(contentType.getId(), format);
             break;
           }
           parent = parent.getBaseType();
