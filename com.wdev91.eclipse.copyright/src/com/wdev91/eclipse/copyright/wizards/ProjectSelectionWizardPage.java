@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2009 Eric Wuillai.
+ * Copyright (c) 2008-2010 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,7 +116,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 
   /**
    * Returns the override selection, coded as an integer:
-   *  0: no override of projects copyrighth settings
+   *  0: no override of projects copyright settings
    *  1: override header content only. Projects header formats definitions are preserved.
    *  2: override header content and formats definitions.
    * 
