@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <copyrights>
-	<copyright label="Eclipse Public License (EPL)">
+	<copyright label="Eclipse Public License (EPL) Version 1.0">
 		<header><![CDATA[Copyright (c) ${year} ${owner}.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -497,7 +497,7 @@ END OF TERMS AND CONDITIONS
 </p>
 </body></html>]]></license>
 	</copyright>
-	<copyright label="GNU General Public License v2 (GPL)">
+	<copyright label="GNU General Public License (GPL) version 2">
     <header><![CDATA[Copyright (c) ${year} ${owner}.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Public License v2.0
@@ -846,7 +846,7 @@ consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.]]></license>
 	</copyright>
-	<copyright label="GNU Lesser General Public License v2.1 (LGPL)">
+	<copyright label="GNU Lesser General Public License (LGPL) version 2.1">
 	  <header><![CDATA[Copyright (c) ${year} ${owner}.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Lesser Public License v2.1
