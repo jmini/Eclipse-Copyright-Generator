@@ -47,6 +47,7 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
 	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_project"; //$NON-NLS-1$
 
 	protected IProject project;
+  protected Text ownerText;
 	protected Button enableButton;
   protected Text headerText;
   protected FormatsPanel formats;
@@ -58,19 +59,33 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
     Font font = parent.getFont();
 
     Composite top = new Composite(parent, SWT.NONE);
-    GridLayout layout = new GridLayout(1, false);
+    GridLayout layout = new GridLayout(2, false);
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     top.setLayout(layout);
     top.setFont(font);
 
+    Label l1 = new Label(top, SWT.NONE);
+    l1.setText(Messages.CopyrightPreferencePage_labelOwner);
+    ownerText = new Text(top, SWT.BORDER);
+    GridData data = new GridData();
+    data.widthHint = 200;
+    ownerText.setLayoutData(data);
+
     enableButton = new Button(top, SWT.CHECK);
     enableButton.setText(Messages.ProjectCopyrightPreferencePage_checkboxEnable);
-    new Label(top, SWT.SEPARATOR | SWT.HORIZONTAL)
-        .setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    data.horizontalSpan = 2;
+    enableButton.setLayoutData(data);
+
+    data = new GridData(GridData.FILL_HORIZONTAL);
+    data.horizontalSpan = 2;
+    new Label(top, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(data);
 
     tab = new TabFolder(top, SWT.TOP);
-    tab.setLayoutData(new GridData(GridData.FILL_BOTH));
+    data = new GridData(GridData.FILL_BOTH);
+    data.horizontalSpan = 2;
+    tab.setLayoutData(data);
 
     TabItem headerTab = new TabItem(tab, SWT.NONE);
     headerTab.setText(Messages.CopyrightPreferencePage_labelHeader);
@@ -101,23 +116,28 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
       }
     });
 
+    doEnable(false);
     ProjectPreferences preferences = CopyrightManager.getProjectPreferences(project);
     if ( preferences != null && preferences != ProjectPreferences.NO_PREFS ) {
-      enableButton.setSelection(true);
-      String text = preferences.getHeaderText();
-      if ( text != null ) {
-        headerText.setText(text);
-      }
-      Map<String, HeaderFormat> hf = preferences.getFormats();
-      if ( formats != null ) {
-        formats.setFormats(hf.values());
-      }
-      doEnable(true);
-    } else {
-      doEnable(false);
+    	if ( preferences.getOwner() != null ) {
+      	ownerText.setText(preferences.getOwner());
+    	}
+    	if ( preferences.getHeaderText() != null || preferences.getFormats() != null ) {
+      	enableButton.setSelection(true);
+        String text = preferences.getHeaderText();
+        if ( text != null ) {
+          headerText.setText(text);
+        }
+        Map<String, HeaderFormat> hf = preferences.getFormats();
+        if ( hf != null ) {
+          formats.setFormats(hf.values());
+        }
+        doEnable(true);
+    	}
     }
 
     PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, CONTEXT_ID);
+    ownerText.setFocus();
     return top;
   }
 
@@ -135,7 +155,13 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
 
   @Override
   public boolean performOk() {
-  	ProjectPreferences preferences = null;
+  	ProjectPreferences preferences = new ProjectPreferences();
+
+  	String owner = ownerText.getText().trim();
+  	if ( owner.length() > 0 ) {
+  		preferences.setOwner(owner);
+  	}
+
   	if ( enableButton.getSelection() ) {
     	Collection<HeaderFormat> headerFormats = formats.getFormats();
       for (HeaderFormat format : headerFormats) {
@@ -150,7 +176,8 @@ public class ProjectCopyrightPreferencePage extends PropertyPage {
           return false;
         }
       }
-  		preferences = new ProjectPreferences(headerText.getText(), headerFormats);
+  		preferences.setHeaderText(headerText.getText());
+  		preferences.setFormats(headerFormats);
   	}
 
   	try {

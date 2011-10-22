@@ -12,8 +12,8 @@ package com.wdev91.eclipse.copyright.model;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,6 +91,7 @@ public class CopyrightManager {
   private static final String TAG_COPYRIGHT = "copyright"; //$NON-NLS-1$
   private static final String TAG_HEADER = "header"; //$NON-NLS-1$
   private static final String TAG_LICENSE = "license"; //$NON-NLS-1$
+  private static final String TAG_OWNER = "owner"; //$NON-NLS-1$
   private static final String TAG_PROOT = "project"; //$NON-NLS-1$
   private static final String ATT_FILENAME = "filename"; //$NON-NLS-1$
   private static final String ATT_LABEL = "label"; //$NON-NLS-1$
@@ -147,13 +148,14 @@ public class CopyrightManager {
     try {
     	String user = System.getProperty("user.name"); //$NON-NLS-1$
     	String owner = Activator.getDefault()
-      												 .getPreferenceStore()
-      												 .getString(Constants.PREFERENCES_OWNER);
+    													.getPreferenceStore()
+      												.getString(Constants.PREFERENCES_OWNER);
+    	if ( owner.length() <= 0 ) {
+    		owner = user;
+    	}
     	Map<String, String> parameters = new HashMap<String, String>();
       parameters.put(Constants.P_YEAR, Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
       parameters.put(Constants.P_USER, System.getProperty("user.name")); //$NON-NLS-1$
-      parameters.put(Constants.P_OWNER,
-                     owner.length() > 0 ? owner : user);
 
       // Creates the license files in the selected projects
       String filename = settings.getLicenseFile();
@@ -174,6 +176,7 @@ public class CopyrightManager {
 
       // Apply the header comment on the selected files
       for (IFile file : settings.getFiles()) {
+        parameters.put(Constants.P_OWNER, owner);
         parameters.put(Constants.P_FILE_NAME, file.getName());
         parameters.put(Constants.P_FILE_ABSPATH, file.getLocation().toString());
         parameters.put(Constants.P_FILE_PATH, file.getProjectRelativePath().toString());
@@ -248,6 +251,9 @@ public class CopyrightManager {
         ProjectPreferences preferences = getProjectPreferences(file.getProject());
         if ( preferences != ProjectPreferences.NO_PREFS ) {
           headerText = preferences.getHeaderText();
+        }
+        if ( preferences.getOwner() != null ) {
+        	parameters.put(Constants.P_OWNER, preferences.getOwner());
         }
       }
       if ( headerText == null ) {
@@ -493,7 +499,7 @@ public class CopyrightManager {
   private static HeaderFormat getHeaderFormat(IProject project, IContentType contentType) {
     ProjectPreferences preferences = getProjectPreferences(project);
     HeaderFormat format = null;
-    if ( preferences != ProjectPreferences.NO_PREFS ) {
+    if ( preferences != ProjectPreferences.NO_PREFS && preferences.getFormats() != null ) {
       Map<String, HeaderFormat> projectFormats = preferences.getFormats();
       format = projectFormats.get(contentType.getId());
       if ( format == null ) {
@@ -541,12 +547,25 @@ public class CopyrightManager {
       File projectFile = getProjectPreferencesFile(project);
       if ( projectFile.exists() ) {
         try {
+          preferences = new ProjectPreferences();
           DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
           Document doc = builder.parse(projectFile);
           Element elt = doc.getDocumentElement();
-          Node n = elt.getElementsByTagName(TAG_COPYRIGHT).item(0);
+
+          Node n = elt.getElementsByTagName(TAG_OWNER).item(0);
+          if ( n != null ) {
+            preferences.setOwner(n.getTextContent());
+          }
+
+          n = elt.getElementsByTagName(TAG_COPYRIGHT).item(0);
+          if ( n != null ) {
+          	preferences.setHeaderText(n.getTextContent());
+          }
+
           Collection<HeaderFormat> formats = loadHeadersFormats(elt.getElementsByTagName(TAG_HEADER));
-          preferences = new ProjectPreferences(n.getTextContent(), formats);
+          if ( formats != null && formats.size() > 0 ) {
+            preferences.setFormats(formats);
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -916,9 +935,11 @@ public class CopyrightManager {
   public static void saveProjectPreferences(IProject project, ProjectPreferences preferences)
   throws IOException, CopyrightException {
     File projectFile = getProjectPreferencesFile(project);
-    if ( preferences != null ) {
-    	if ( preferences.getHeaderText().length() == 0 ) {
-    		throw new CopyrightException(Messages.CopyrightManager_err_savingHeaderTextMissingForProject);
+    if ( ! preferences.isEmpty() ) {
+    	if ( preferences.getHeaderText() != null || preferences.getFormats() != null ) {
+      	if ( preferences.getHeaderText().length() == 0 ) {
+      		throw new CopyrightException(Messages.CopyrightManager_err_savingHeaderTextMissingForProject);
+      	}
     	}
 
     	if ( ! projectFile.exists() ) {
@@ -928,32 +949,41 @@ public class CopyrightManager {
     	PrintWriter writer = new PrintWriter(projectFile, XML_ENCODING);
       writer.println("<?xml version=\"1.0\" encoding=\"" + XML_ENCODING + "\" ?>");
       writer.println('<' + TAG_PROOT + '>');
-      writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())
-      							 + "]]></" + TAG_COPYRIGHT + '>');
-      for (HeaderFormat format : preferences.getFormats().values()) {
-      	if ( format.isExcluded() ) {
-        	writer.println("\t<" + TAG_HEADER
-        								 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
-              					 + ATT_EXCLUDED + "=\"true\" />");
-      	} else {
-        	writer.println("\t<" + TAG_HEADER
-              					 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
-              					 + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
-              					 + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
-              					 + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
-        	writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
-												 + "]]></" + TAG_BEGIN + '>');
-        	writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
-        								 + "]]></" + TAG_PREFIX + '>');
-        	writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
-        								 + "]]></" + TAG_END + '>');
-          if ( format.getFirstLinePattern() != null ) {
-            writer.println("\t\t<" + TAG_FIRSTLINEPATTERN + "><![CDATA[" + format.getFirstLinePattern()
-            							 + "]]></" + TAG_FIRSTLINEPATTERN + '>');
-          }
-        	writer.println("\t</" + TAG_HEADER + '>');
-      	}
+      // Owner tag
+      writer.println("\t<" + TAG_OWNER + ">" + stripNonValidXMLCharacters(preferences.getOwner())
+					 + "</" + TAG_OWNER + '>');
+      // Copyright text tag
+      if ( preferences.getHeaderText() != null ) {
+        writer.println("\t<" + TAG_COPYRIGHT + "><![CDATA[" + stripNonValidXMLCharacters(preferences.getHeaderText())
+						 + "]]></" + TAG_COPYRIGHT + '>');
       }
+      // Formats for the different content types
+    	if ( preferences.getFormats() != null ) {
+        for (HeaderFormat format : preferences.getFormats().values()) {
+        	if ( format.isExcluded() ) {
+          	writer.println("\t<" + TAG_HEADER
+          								 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+                					 + ATT_EXCLUDED + "=\"true\" />");
+        	} else {
+          	writer.println("\t<" + TAG_HEADER
+                					 + " " + ATT_CONTENTID + "=\"" + format.getContentId() + "\" "
+                					 + ATT_POSTBLANKLINES + "=\"" + format.getPostBlankLines() + "\" "
+                					 + ATT_LINEFORMAT + "=\"" + format.isLineCommentFormat() + "\" "
+                					 + ATT_PRESERVEFIRST + "=\"" + format.isPreserveFirstLine() + "\">");
+          	writer.println("\t\t<" + TAG_BEGIN + "><![CDATA[" + format.getBeginLine()
+  												 + "]]></" + TAG_BEGIN + '>');
+          	writer.println("\t\t<" + TAG_PREFIX + "><![CDATA[" + format.getLinePrefix()
+          								 + "]]></" + TAG_PREFIX + '>');
+          	writer.println("\t\t<" + TAG_END + "><![CDATA[" + format.getEndLine()
+          								 + "]]></" + TAG_END + '>');
+            if ( format.getFirstLinePattern() != null ) {
+              writer.println("\t\t<" + TAG_FIRSTLINEPATTERN + "><![CDATA[" + format.getFirstLinePattern()
+              							 + "]]></" + TAG_FIRSTLINEPATTERN + '>');
+            }
+          	writer.println("\t</" + TAG_HEADER + '>');
+        	}
+        }
+    	}
       writer.println("</" + TAG_PROOT + '>');
       writer.flush();
       writer.close();

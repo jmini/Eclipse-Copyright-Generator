@@ -20,27 +20,41 @@ import java.util.Map;
 public class ProjectPreferences {
   public static final ProjectPreferences NO_PREFS = new ProjectPreferences();
 
-  private String headerText;
-  private Map<String, HeaderFormat> formats;
+  private String owner = null;
+  private String headerText = null;
+  private Map<String, HeaderFormat> formats = null;
 
-  private ProjectPreferences() {
-    headerText = null;
-    formats = null;
+  public ProjectPreferences() {
   }
 
-  public ProjectPreferences(String headerText, Collection<HeaderFormat> formats) {
-    this.headerText = headerText;
-    this.formats = new HashMap<String, HeaderFormat>(formats.size());
-    for (HeaderFormat f : formats) {
-      this.formats.put(f.getContentId(), f);
-    }
+  public Map<String, HeaderFormat> getFormats() {
+    return formats;
   }
 
   public String getHeaderText() {
     return headerText;
   }
 
-  public Map<String, HeaderFormat> getFormats() {
-    return formats;
-  }
+	public String getOwner() {
+		return owner;
+	}
+
+	public boolean isEmpty() {
+		return owner == null && headerText == null && formats == null;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public void setHeaderText(String headerText) {
+		this.headerText = headerText;
+	}
+
+	public void setFormats(Collection<HeaderFormat> formats) {
+    this.formats = new HashMap<String, HeaderFormat>(formats.size());
+    for (HeaderFormat f : formats) {
+      this.formats.put(f.getContentId(), f);
+    }
+	}
 }
