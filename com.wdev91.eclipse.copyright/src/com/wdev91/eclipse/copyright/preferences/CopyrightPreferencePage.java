@@ -138,7 +138,7 @@ public class CopyrightPreferencePage extends PreferencePage
     l2.setLayoutData(data);
     l2.setFont(font);
 
-    List list = new List(top, SWT.BORDER);
+    List list = new List(top, SWT.BORDER | SWT.V_SCROLL);
     data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
     data.heightHint = (fontData.length > 0 ? fontData[0].getHeight() : 10) * LIST_LINES_NUMBER;
     data.horizontalSpan = 2;
