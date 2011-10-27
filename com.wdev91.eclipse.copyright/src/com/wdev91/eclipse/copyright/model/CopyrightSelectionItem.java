@@ -16,10 +16,12 @@ public class CopyrightSelectionItem {
   protected IResource resource;
   protected CopyrightSelectionItem parent;
   protected CopyrightSelectionItem[] children;
+  protected int selected = 0;
 
   public CopyrightSelectionItem(IResource resource, CopyrightSelectionItem[] children) {
     this.resource  = resource;
     this.children = children;
+    this.selected = 2;
     if ( children != null ) {
       for (CopyrightSelectionItem child : children) {
         child.parent = this;
@@ -38,4 +40,17 @@ public class CopyrightSelectionItem {
   public CopyrightSelectionItem getParent() {
     return parent;
   }
+
+	public int getSelected() {
+		return selected;
+	}
+
+	public void setSelected(int selected) {
+		this.selected = selected;
+	}
+
+	@Override
+	public String toString() {
+		return resource.getName() + "," + selected;
+	}
 }
