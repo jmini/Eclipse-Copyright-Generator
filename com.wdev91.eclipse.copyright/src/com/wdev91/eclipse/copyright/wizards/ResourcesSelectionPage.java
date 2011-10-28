@@ -17,8 +17,6 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
@@ -79,7 +77,6 @@ public class ResourcesSelectionPage extends WizardPage {
     CheckboxFilteredTree filteredTree = new CheckboxFilteredTree(top,
     		SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
 
-//    viewer = new CheckboxTreeViewer(top, SWT.BORDER);
     viewer = filteredTree.getViewer();
     viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
     viewer.setContentProvider(new SelectionContentProvider());
