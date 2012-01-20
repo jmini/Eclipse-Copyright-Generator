@@ -998,11 +998,13 @@ public class CopyrightManager {
    * copyright settings.
    * 
    * @param settings Copyright settings
+   * @param preselection Preselected list of files
+   * @param monitor Eclipse monitor
    * @return Array of selection items
    * @throws CopyrightException
    */
   public static CopyrightSelectionItem[] selectResources(CopyrightSettings settings,
-  		IProgressMonitor monitor) throws CopyrightException {
+  		List<IFile> preselection, IProgressMonitor monitor) throws CopyrightException {
     String[] includePatterns = settings.getIncludePattern().split(","); //$NON-NLS-1$
     StringMatcher[] includeMatchers = new StringMatcher[includePatterns.length];
     for (int i = 0; i < includePatterns.length; i++) {
@@ -1023,7 +1025,7 @@ public class CopyrightManager {
     for (IProject project : settings.getProjects()) {
       try {
         CopyrightSelectionItem[] selection = selectResources(project, includeMatchers,
-        		excludeMatchers, settings, monitor);
+        		excludeMatchers, settings, preselection, monitor);
         if ( selection.length > 0 ) {
           projectsSelection.add(new CopyrightSelectionItem(project, selection));
         }
@@ -1036,19 +1038,20 @@ public class CopyrightManager {
 
   private static CopyrightSelectionItem[] selectResources(IContainer parent,
       StringMatcher[] includeMatchers, StringMatcher[] excludeMatchers,
-      CopyrightSettings settings, IProgressMonitor monitor)
+      CopyrightSettings settings, List<IFile> preselection, IProgressMonitor monitor)
   		throws CoreException, CopyrightException {
     List<CopyrightSelectionItem> membersSelection = new ArrayList<CopyrightSelectionItem>();
     IResource[] members = parent.members();
     for (IResource member : members) {
     	monitor.subTask(parent.getName() + " - " + member.getFullPath().toPortableString()); //$NON-NLS-1$
       if ( member.getName().startsWith(".") ) continue; //$NON-NLS-1$
-      if ( member instanceof IFile && isValidFile((IFile) member, includeMatchers,
-      																						excludeMatchers, settings) ) {
+      if ( member instanceof IFile
+      		 && isValidFile((IFile) member, includeMatchers, excludeMatchers, settings)
+      		 && (preselection == null || preselection.contains(member)) ) {
         membersSelection.add(new CopyrightSelectionItem(member, null));
       } else if ( member instanceof IContainer ) {
         CopyrightSelectionItem[] selection = selectResources((IContainer) member,
-        		includeMatchers, excludeMatchers, settings, monitor);
+        		includeMatchers, excludeMatchers, settings, preselection, monitor);
         if ( selection.length > 0 ) {
           membersSelection.add(new CopyrightSelectionItem(member, selection));
         }

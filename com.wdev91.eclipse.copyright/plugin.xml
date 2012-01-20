@@ -52,5 +52,48 @@
             file="contexts.xml">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.wdev91.eclipse.copyright.Category"
+            name="%actionset_label">
+      </category>
+      <command
+            categoryId="com.wdev91.eclipse.copyright.Category"
+            defaultHandler="com.wdev91.eclipse.copyright.actions.ApplyCopyrightOnSelectionHandler"
+            id="com.wdev91.eclipse.copyright.ApplyCopyrightCommand"
+            name="%actionApply_label">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="com.wdev91.eclipse.copyright.ApplyCopyrightCommand"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <and>
+                        <adapt
+                              type="org.eclipse.core.resources.IResource">
+                        </adapt>
+                        <not>
+                           <adapt
+                                 type="org.eclipse.core.resources.IProject">
+                           </adapt>
+                        </not>
+                     </and>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
 
 </plugin>

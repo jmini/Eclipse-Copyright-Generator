@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2011 Eric Wuillai.
+ * Copyright (c) 2008-2012 Eric Wuillai.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.wizards;
 
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangingListener;
@@ -28,6 +31,9 @@ import com.wdev91.eclipse.copyright.model.CopyrightException;
 import com.wdev91.eclipse.copyright.model.CopyrightManager;
 import com.wdev91.eclipse.copyright.model.CopyrightSettings;
 
+/**
+ * Wizard to apply copyright on resources in the workspace projects.
+ */
 public class ApplyCopyrightWizard extends Wizard {
 	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".wizard"; //$NON-NLS-1$
 
@@ -35,6 +41,9 @@ public class ApplyCopyrightWizard extends Wizard {
   protected CopyrightSettingsPage settingsPage;
   protected ResourcesSelectionPage selectionPage;
   protected CopyrightSettings settings;
+
+  protected List<IProject> projectsFilter = null;
+  protected List<IFile> filesFilter = null;
 
   public ApplyCopyrightWizard() {
     setWindowTitle(Messages.ApplyCopyrightWizard_title);
@@ -60,7 +69,7 @@ public class ApplyCopyrightWizard extends Wizard {
     };
     ((WizardDialog) getContainer()).addPageChangingListener(listener);
 
-    projectsPage.init(settings);
+    projectsPage.init(settings, projectsFilter);
     settingsPage.init(settings);
   }
 
@@ -73,7 +82,7 @@ public class ApplyCopyrightWizard extends Wizard {
               monitor.beginTask(Messages.ApplyCopyrightWizard_selectionTaskMessage,
                                 IProgressMonitor.UNKNOWN);
               try {
-								selectionPage.setSelection(CopyrightManager.selectResources(settings, monitor));
+								selectionPage.setSelection(CopyrightManager.selectResources(settings, filesFilter, monitor));
 								settings.setChanged(false);
 	              monitor.done();
 							} catch (CopyrightException e) {
@@ -88,7 +97,11 @@ public class ApplyCopyrightWizard extends Wizard {
     }
   }
 
-  public void init(IProject[] projects) {
+  /**
+   * Init the wizard with a selection of projects.
+   * @param projects Projects to pre-select
+   */
+  protected void init(IProject[] projects) {
     settings = new CopyrightSettings();
     settings.setProjects(projects);
   }
@@ -96,6 +109,15 @@ public class ApplyCopyrightWizard extends Wizard {
   public static void openWizard(Shell shell, IProject[] projects) {
     ApplyCopyrightWizard wizard = new ApplyCopyrightWizard();
     wizard.init(projects);
+    WizardDialog dialog = new WizardDialog(shell, wizard);
+    dialog.open();
+  }
+
+  public static void openWizard(Shell shell, List<IProject> projects, List<IFile> files) {
+    ApplyCopyrightWizard wizard = new ApplyCopyrightWizard();
+    wizard.init(projects.toArray(new IProject[] {}));
+    wizard.projectsFilter = projects;
+    wizard.filesFilter = files;
     WizardDialog dialog = new WizardDialog(shell, wizard);
     dialog.open();
   }

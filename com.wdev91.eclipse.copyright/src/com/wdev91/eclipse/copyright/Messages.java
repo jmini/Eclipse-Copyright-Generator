@@ -14,7 +14,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
   private static final String BUNDLE_NAME = "com.wdev91.eclipse.copyright.messages"; //$NON-NLS-1$
-  public static String ApplyCopyrightWizard_error;
+  public static String ApplyCopyrightOnSelectionHandler_confirmMessage;
+	public static String ApplyCopyrightOnSelectionHandler_messageTitle;
+	public static String ApplyCopyrightWizard_error;
   public static String ApplyCopyrightWizard_selectionTaskMessage;
   public static String ApplyCopyrightWizard_title;
   public static String CopyrightManager_customLabel;

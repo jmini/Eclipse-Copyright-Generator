@@ -45,6 +45,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
   protected Button overrideText;
 
   protected CopyrightSettings settings;
+  protected List<IProject> projectsFilter;
 
   ProjectSelectionWizardPage() {
     super(DEFAULT_PAGE_NAME);
@@ -72,7 +73,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
         }
         List<IProject> projects = new ArrayList<IProject>();
         for (IProject project : ((IWorkspace) element).getRoot().getProjects()) {
-          if ( project.isOpen() ) {
+          if ( project.isOpen() && ( projectsFilter == null || projectsFilter.contains(project) ) ) {
             projects.add(project);
           }
         }
@@ -145,8 +146,9 @@ public class ProjectSelectionWizardPage extends WizardPage {
     return projects;
   }
 
-  public void init(CopyrightSettings settings) {
+  public void init(CopyrightSettings settings, List<IProject> projectsFilter) {
     this.settings = settings;
+    this.projectsFilter = projectsFilter;
   }
 
   protected void validatePage() {
