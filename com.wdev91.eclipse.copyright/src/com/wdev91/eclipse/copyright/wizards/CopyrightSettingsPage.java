@@ -175,16 +175,14 @@ public class CopyrightSettingsPage extends WizardPage {
       }
     });
     forceApply.addSelectionListener(new SelectionListener() {
-      public void widgetDefaultSelected(SelectionEvent e) {
-      }
+      public void widgetDefaultSelected(SelectionEvent e) {}
 
       public void widgetSelected(SelectionEvent e) {
         settings.setForceApply(forceApply.getSelection());
       }
     });
     addLicenseFile.addSelectionListener(new SelectionListener() {
-      public void widgetDefaultSelected(SelectionEvent e) {
-      }
+      public void widgetDefaultSelected(SelectionEvent e) {}
 
       public void widgetSelected(SelectionEvent e) {
         boolean selected = addLicenseFile.getSelection();
@@ -209,16 +207,16 @@ public class CopyrightSettingsPage extends WizardPage {
   }
 
   protected void validatePage(Widget widget) {
-  	if ( widget == headerText ) {
+    if ( widget == headerText ) {
       String header = headerText.getText().trim();
       setPageComplete(header.length() > 0);
       Copyright cp = settings.getCopyright();
       if ( cp != null ) {
         cp.setHeaderText(header);
       }
-  	} else if ( widget == includePattern ) {
+    } else if ( widget == includePattern ) {
       settings.setIncludePattern(includePattern.getText().trim());
-  	} else if ( widget == excludePattern ) {
+    } else if ( widget == excludePattern ) {
       settings.setExcludePattern(excludePattern.getText().trim());
     } else if ( widget == licenseFile ) {
       settings.setLicenseFile(licenseFile.getText().trim());

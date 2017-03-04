@@ -40,10 +40,9 @@ public class ApplyCopyrightAction implements IWorkbenchWindowActionDelegate {
   private IStructuredSelection selection;
 
   /**
-	 * The constructor.
-	 */
-	public ApplyCopyrightAction() {
-	}
+   * The constructor.
+   */
+  public ApplyCopyrightAction() {}
 
   /**
    * Disposes any system resources we previously allocated.
@@ -107,34 +106,34 @@ public class ApplyCopyrightAction implements IWorkbenchWindowActionDelegate {
   }
 
   /**
-	 * Initialisation of the action.
-	 * Caches window object in order to be able to provide parent shell for the
-	 * wizard dialog.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#init
-	 */
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
+   * Initialisation of the action.
+   * Caches window object in order to be able to provide parent shell for the
+   * wizard dialog.
+   * 
+   * @see IWorkbenchWindowActionDelegate#init
+   */
+  public void init(IWorkbenchWindow window) {
+    this.window = window;
+  }
 
-	/**
-	 * Action execution.
-	 * Opens the wizard dialog.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#run
-	 */
-	public void run(IAction action) {
-	  ApplyCopyrightWizard.openWizard(window.getShell(), getSelectedProjects());
-	}
+  /**
+   * Action execution.
+   * Opens the wizard dialog.
+   * 
+   * @see IWorkbenchWindowActionDelegate#run
+   */
+  public void run(IAction action) {
+    ApplyCopyrightWizard.openWizard(window.getShell(), getSelectedProjects());
+  }
 
-	/**
-	 * Selection in the workbench has been changed.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	  if ( selection instanceof IStructuredSelection ) {
-	    this.selection = (IStructuredSelection) selection;
-	  }
-	}
+  /**
+   * Selection in the workbench has been changed.
+   * 
+   * @see IWorkbenchWindowActionDelegate#selectionChanged
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+    if ( selection instanceof IStructuredSelection ) {
+	  this.selection = (IStructuredSelection) selection;
+    }
+  }
 }

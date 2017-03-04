@@ -57,22 +57,22 @@ public class ResourcesSelectionPage extends WizardPage {
     top.setFont(font);
 
     PatternFilter filter = new PatternFilter() {
-			@Override
-			public boolean isElementSelectable(Object element) {
-				if ( element instanceof CopyrightSelectionItem ) {
-					return ((CopyrightSelectionItem) element).getResource() instanceof IFile;
-				}
-				return false;
-			}
+      @Override
+      public boolean isElementSelectable(Object element) {
+        if ( element instanceof CopyrightSelectionItem ) {
+          return ((CopyrightSelectionItem) element).getResource() instanceof IFile;
+        }
+        return false;
+      }
 
-			@Override
-			protected boolean isLeafMatch(Viewer viewer, Object element) {
-				if ( element instanceof CopyrightSelectionItem
-						 && ((CopyrightSelectionItem) element).getResource() instanceof IFile ) {
-					return super.isLeafMatch(viewer, element);
-				}
-				return false;
-			}
+      @Override
+      protected boolean isLeafMatch(Viewer viewer, Object element) {
+        if ( element instanceof CopyrightSelectionItem
+        		&& ((CopyrightSelectionItem) element).getResource() instanceof IFile ) {
+          return super.isLeafMatch(viewer, element);
+        }
+        return false;
+      }
     };
     CheckboxFilteredTree filteredTree = new CheckboxFilteredTree(top,
     		SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
@@ -83,13 +83,13 @@ public class ResourcesSelectionPage extends WizardPage {
     viewer.setLabelProvider(new SelectionLabelProvider());
     viewer.addCheckStateListener(new ICheckStateListener() {
       public void checkStateChanged(CheckStateChangedEvent event) {
-      	CopyrightSelectionItem element = (CopyrightSelectionItem) event.getElement();
-      	if ( element.getResource() instanceof IFile ) {
-      		checkedCount += event.getChecked() ? 1 : -1;
-      		element.setSelected(event.getChecked() ? 2 : 0);
-      	} else {
+        CopyrightSelectionItem element = (CopyrightSelectionItem) event.getElement();
+        if ( element.getResource() instanceof IFile ) {
+          checkedCount += event.getChecked() ? 1 : -1;
+          element.setSelected(event.getChecked() ? 2 : 0);
+        } else {
           updateCount(element, event.getChecked());
-      	}
+        }
         setSubtreeChecked(element, false);
         viewer.setGrayed(event.getElement(), false);
         viewer.setSubtreeChecked(event.getElement(), event.getChecked());
@@ -98,14 +98,14 @@ public class ResourcesSelectionPage extends WizardPage {
       }
     });
     viewer.setCheckStateProvider(new ICheckStateProvider() {
-			public boolean isChecked(Object element) {
-				return ((CopyrightSelectionItem) element).getSelected() > 0;
-			}
+      public boolean isChecked(Object element) {
+        return ((CopyrightSelectionItem) element).getSelected() > 0;
+      }
 
-			public boolean isGrayed(Object element) {
-				return ((CopyrightSelectionItem) element).getSelected() == 1;
-			}
-		});
+      public boolean isGrayed(Object element) {
+        return ((CopyrightSelectionItem) element).getSelected() == 1;
+      }
+    });
 
     selectionReport = new Label(top, SWT.NONE);
     selectionReport.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -113,7 +113,7 @@ public class ResourcesSelectionPage extends WizardPage {
     PlatformUI.getWorkbench().getHelpSystem().setHelp(top, ApplyCopyrightWizard.CONTEXT_ID);
     setPageComplete(false);
     setControl(top);
-	}
+  }
 
   public void getSelection(CopyrightSettings settings) {
     ArrayList<IFile> selection = new ArrayList<IFile>();
@@ -127,21 +127,21 @@ public class ResourcesSelectionPage extends WizardPage {
   }
 
   private void setChecked(TreeItem[] items) {
-  	for (TreeItem item : items) {
-    	item.setChecked(true);
-    	Object data = item.getData();
+    for (TreeItem item : items) {
+      item.setChecked(true);
+      Object data = item.getData();
       if ( data != null ) {
-      	CopyrightSelectionItem csi = (CopyrightSelectionItem) data;
-      	if ( csi.getResource() instanceof IFile ) {
-        	checkedCount++;
-      	}
+        CopyrightSelectionItem csi = (CopyrightSelectionItem) data;
+        if ( csi.getResource() instanceof IFile ) {
+          checkedCount++;
+        }
       }
-    	setChecked(item.getItems());
+      setChecked(item.getItems());
     }
   }
 
   public void setSelection(CopyrightSelectionItem[] selection) {
-  	checkedCount = 0;
+    checkedCount = 0;
     viewer.setInput(new CopyrightSelectionInput(selection));
     viewer.getTree().setRedraw(false);
     viewer.expandAll();
@@ -163,19 +163,19 @@ public class ResourcesSelectionPage extends WizardPage {
   }
 
   private void updateCount(CopyrightSelectionItem element, boolean checked) {
-  	element.setSelected(checked ? 2 : 0);
-  	if ( element.getResource() instanceof IFile ) {
-  		boolean isChecked = viewer.getChecked(element);
-  		if ( isChecked && ! checked ) {
-  			checkedCount --;
-  		} else if ( (! isChecked) && checked ) {
-  			checkedCount ++;
-  		}
-  	} else {
-  		for (CopyrightSelectionItem child : element.getChildren()) {
-  			updateCount(child, checked);
-  		}
-  	}
+    element.setSelected(checked ? 2 : 0);
+    if ( element.getResource() instanceof IFile ) {
+      boolean isChecked = viewer.getChecked(element);
+      if ( isChecked && ! checked ) {
+        checkedCount --;
+      } else if ( (! isChecked) && checked ) {
+        checkedCount ++;
+      }
+    } else {
+      for (CopyrightSelectionItem child : element.getChildren()) {
+        updateCount(child, checked);
+      }
+    }
   }
 
   private void updateParentState(CopyrightSelectionItem parent) {
@@ -198,9 +198,9 @@ public class ResourcesSelectionPage extends WizardPage {
   }
 
   protected void validatePage() {
-  	selectionReport.setText(totalCount > 0
-  			? NLS.bind(Messages.ResourcesSelectionPage_selectedFileInfo, checkedCount, totalCount)
-  			: Messages.ResourcesSelectionPage_noResourcesInfo);
+    selectionReport.setText(totalCount > 0
+    		? NLS.bind(Messages.ResourcesSelectionPage_selectedFileInfo, checkedCount, totalCount)
+    				: Messages.ResourcesSelectionPage_noResourcesInfo);
     setPageComplete(checkedCount > 0);
   }
 }

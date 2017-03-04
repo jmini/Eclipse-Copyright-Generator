@@ -24,8 +24,7 @@ public class ProjectPreferences {
   private String headerText = null;
   private Map<String, HeaderFormat> formats = null;
 
-  public ProjectPreferences() {
-  }
+  public ProjectPreferences() {}
 
   public Map<String, HeaderFormat> getFormats() {
     return formats;
@@ -35,26 +34,26 @@ public class ProjectPreferences {
     return headerText;
   }
 
-	public String getOwner() {
-		return owner;
-	}
+  public String getOwner() {
+    return owner;
+  }
 
-	public boolean isEmpty() {
-		return owner == null && headerText == null && formats == null;
-	}
+  public boolean isEmpty() {
+    return owner == null && headerText == null && formats == null;
+  }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
 
-	public void setHeaderText(String headerText) {
-		this.headerText = headerText;
-	}
+  public void setHeaderText(String headerText) {
+    this.headerText = headerText;
+  }
 
-	public void setFormats(Collection<HeaderFormat> formats) {
+  public void setFormats(Collection<HeaderFormat> formats) {
     this.formats = new HashMap<String, HeaderFormat>(formats.size());
     for (HeaderFormat f : formats) {
       this.formats.put(f.getContentId(), f);
     }
-	}
+  }
 }

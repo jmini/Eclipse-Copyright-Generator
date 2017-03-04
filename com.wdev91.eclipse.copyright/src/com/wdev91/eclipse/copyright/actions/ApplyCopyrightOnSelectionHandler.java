@@ -42,91 +42,90 @@ import com.wdev91.eclipse.copyright.wizards.ApplyCopyrightWizard;
  * concern Eclipse navigator and package explorer.
  */
 public class ApplyCopyrightOnSelectionHandler extends AbstractHandler {
-	public static final String COMMAND_ID = "com.wdev91.eclipse.copyright.ApplyCopyrightCommand"; //$NON-NLS-1$
+  public static final String COMMAND_ID = "com.wdev91.eclipse.copyright.ApplyCopyrightCommand"; //$NON-NLS-1$
 
-	private void addFile(IResource res, List<IFile> resources) {
-		if ( res instanceof IFile ) {
-			if ( ! resources.contains(res) ) {
-				resources.add((IFile) res);
-			}
-		} else if ( res instanceof IFolder ) {
-			try {
-				for (IResource member : ((IFolder) res).members(IFolder.EXCLUDE_DERIVED)) {
-					addFile(member, resources);
-				}
-			} catch (CoreException e) {
-			}
-		}
-	}
+  private void addFile(IResource res, List<IFile> resources) {
+    if ( res instanceof IFile ) {
+      if ( ! resources.contains(res) ) {
+        resources.add((IFile) res);
+      }
+    } else if ( res instanceof IFolder ) {
+      try {
+        for (IResource member : ((IFolder) res).members(IFolder.EXCLUDE_DERIVED)) {
+          addFile(member, resources);
+        }
+      } catch (CoreException e) {}
+    }
+  }
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		// Creates list of selected files
-		List<IFile> resources = new ArrayList<IFile>();
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getActiveMenuSelection(event);
-		for (Object sel : selection.toArray()) {
-			if ( sel instanceof IFile || sel instanceof IFolder ) {
-				addFile((IResource) sel, resources);
-			} else {
-				Object ao = null;
-				if ( sel instanceof IAdaptable ) {
-					ao = ((IAdaptable) sel).getAdapter(IFile.class);
-					if ( ao == null ) {
-						ao = ((IAdaptable) sel).getAdapter(IFolder.class);
-					}
-				}
-				if ( ao == null ) {
-					ao = findJavaResource(sel);
-				}
-				if ( ao != null ) {
-					addFile((IResource) ao, resources);
-				}
-			}
-		}
+  public Object execute(ExecutionEvent event) throws ExecutionException {
+    // Creates list of selected files
+    List<IFile> resources = new ArrayList<IFile>();
+    IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getActiveMenuSelection(event);
+    for (Object sel : selection.toArray()) {
+      if ( sel instanceof IFile || sel instanceof IFolder ) {
+        addFile((IResource) sel, resources);
+      } else {
+        Object ao = null;
+        if ( sel instanceof IAdaptable ) {
+          ao = ((IAdaptable) sel).getAdapter(IFile.class);
+          if ( ao == null ) {
+            ao = ((IAdaptable) sel).getAdapter(IFolder.class);
+          }
+        }
+        if ( ao == null ) {
+          ao = findJavaResource(sel);
+        }
+        if ( ao != null ) {
+          addFile((IResource) ao, resources);
+        }
+      }
+    }
 
-		// List of projects containing the selected files, with analyze if wizard is needed
-		List<IProject> projects = new ArrayList<IProject>();
-		boolean wizard = false;
-		for (IFile f : resources) {
-			IProject p = f.getProject();
-			if ( ! projects.contains(p) ) {
-				projects.add(p);
-				ProjectPreferences prefs;
-				if ( (prefs = CopyrightManager.getProjectPreferences(p)) == null
-						 || prefs.getHeaderText() == null )
-					wizard = true;
-			}
-		}
+    // List of projects containing the selected files, with analyze if wizard is needed
+    List<IProject> projects = new ArrayList<IProject>();
+    boolean wizard = false;
+    for (IFile f : resources) {
+      IProject p = f.getProject();
+      if ( ! projects.contains(p) ) {
+        projects.add(p);
+        ProjectPreferences prefs;
+        if ( (prefs = CopyrightManager.getProjectPreferences(p)) == null
+        		|| prefs.getHeaderText() == null )
+          wizard = true;
+      }
+    }
 
-		// Apply the copyrights
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if ( wizard ) {
-			ApplyCopyrightWizard.openWizard(shell, projects, resources);
-		} else {
-			if ( MessageDialog.openConfirm(shell, Messages.ApplyCopyrightOnSelectionHandler_messageTitle,
-							 NLS.bind(Messages.ApplyCopyrightOnSelectionHandler_confirmMessage,
-							 resources.size())) ) {
-				CopyrightSettings settings = new CopyrightSettings();
-				settings.setFiles(resources.toArray(new IFile[] {}));
-				CopyrightManager.applyCopyrightJob(settings);
-			}
-		}
+    // Apply the copyrights
+    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    if ( wizard ) {
+      ApplyCopyrightWizard.openWizard(shell, projects, resources);
+    } else {
+      if ( MessageDialog.openConfirm(shell, Messages.ApplyCopyrightOnSelectionHandler_messageTitle,
+    		  NLS.bind(Messages.ApplyCopyrightOnSelectionHandler_confirmMessage,
+    				  resources.size())) ) {
+        CopyrightSettings settings = new CopyrightSettings();
+        settings.setFiles(resources.toArray(new IFile[] {}));
+        CopyrightManager.applyCopyrightJob(settings);
+      }
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private IResource findJavaResource(Object obj) {
-		if ( ! obj.getClass().getPackage().getName().startsWith("org.eclipse.jdt") ) //$NON-NLS-1$
-			return null;
+  private IResource findJavaResource(Object obj) {
+    if ( ! obj.getClass().getPackage().getName().startsWith("org.eclipse.jdt") ) //$NON-NLS-1$
+      return null;
 
-		try {
-			Method m = obj.getClass().getMethod("getResource"); //$NON-NLS-1$
-			Object res = m.invoke(obj);
-			if ( res instanceof IFile || res instanceof IFolder ) {
-				return (IResource) res;
-			}
-		} catch (Exception e) {
-			// Method not found
-		}
-		return null;
-	}
+    try {
+      Method m = obj.getClass().getMethod("getResource"); //$NON-NLS-1$
+      Object res = m.invoke(obj);
+      if ( res instanceof IFile || res instanceof IFolder ) {
+        return (IResource) res;
+      }
+    } catch (Exception e) {
+      // Method not found
+    }
+    return null;
+  }
 }

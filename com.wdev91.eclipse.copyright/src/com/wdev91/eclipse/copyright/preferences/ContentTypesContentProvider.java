@@ -85,8 +85,7 @@ public class ContentTypesContentProvider implements ITreeContentProvider {
    * 
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose() {
-  }
+  public void dispose() {}
 
   /*
    * (non-Javadoc)
