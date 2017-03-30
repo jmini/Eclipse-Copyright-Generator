@@ -57,9 +57,9 @@ public class CopyrightSettings {
 
   public String getExcludePattern() {
     return excludePattern != null && excludePattern.length() > 0 ? excludePattern : null;
-	}
+  }
 
-	public IProject[] getProjects() {
+  public IProject[] getProjects() {
     return projects != null ? projects : new IProject[0];
   }
 
@@ -103,11 +103,11 @@ public class CopyrightSettings {
   }
 
   public void setExcludePattern(String pattern) {
-		this.excludePattern = pattern != null ? pattern.trim() : null;
+    this.excludePattern = pattern != null ? pattern.trim() : null;
     this.changed = true;
-	}
+  }
 
-	public void setProjects(IProject[] projects) {
+  public void setProjects(IProject[] projects) {
     this.projects = projects;
     this.changed  = true;
   }

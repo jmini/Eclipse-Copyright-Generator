@@ -41,9 +41,7 @@ public class SelectionContentProvider implements ITreeContentProvider {
     return getChildren(inputElement);
   }
 
-  public void dispose() {
-  }
+  public void dispose() {}
 
-  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-  }
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 }

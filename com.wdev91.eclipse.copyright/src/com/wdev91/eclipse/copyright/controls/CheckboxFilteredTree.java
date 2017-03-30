@@ -18,22 +18,22 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 public class CheckboxFilteredTree extends FilteredTree {
 
-	public CheckboxFilteredTree(Composite parent, boolean useNewLook) {
-		super(parent, useNewLook);
-	}
+  public CheckboxFilteredTree(Composite parent, boolean useNewLook) {
+    super(parent, useNewLook);
+  }
 
-	public CheckboxFilteredTree(Composite parent, int treeStyle,
-			PatternFilter filter, boolean useNewLook) {
-		super(parent, treeStyle, filter, useNewLook);
-	}
+  public CheckboxFilteredTree(Composite parent, int treeStyle,
+		  PatternFilter filter, boolean useNewLook) {
+    super(parent, treeStyle, filter, useNewLook);
+  }
 
-	@Override
-	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
-		return new CheckboxTreeViewer(parent, style);
-	}
+  @Override
+  protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+    return new CheckboxTreeViewer(parent, style);
+  }
 
-	@Override
-	public CheckboxTreeViewer getViewer() {
-		return (CheckboxTreeViewer) super.getViewer();
-	}
+  @Override
+  public CheckboxTreeViewer getViewer() {
+    return (CheckboxTreeViewer) super.getViewer();
+  }
 }

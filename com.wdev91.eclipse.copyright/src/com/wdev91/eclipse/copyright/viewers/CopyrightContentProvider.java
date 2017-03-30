@@ -14,15 +14,13 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class CopyrightContentProvider implements IStructuredContentProvider {
-  public void dispose() {
-  }
+  public void dispose() {}
 
-  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-  }
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 
   public Object[] getElements(Object inputElement) {
     return inputElement instanceof CopyrightsInput
-           ? ((CopyrightsInput) inputElement).getCopyrights()
-           : new Object[] {};
+    		? ((CopyrightsInput) inputElement).getCopyrights()
+    				: new Object[] {};
   }
 }

@@ -35,9 +35,9 @@ import com.wdev91.eclipse.copyright.model.CopyrightSettings;
  * Wizard to apply copyright on resources in the workspace projects.
  */
 public class ApplyCopyrightWizard extends Wizard {
-	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".wizard"; //$NON-NLS-1$
+  public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".wizard"; //$NON-NLS-1$
 
-	protected ProjectSelectionWizardPage projectsPage;
+  protected ProjectSelectionWizardPage projectsPage;
   protected CopyrightSettingsPage settingsPage;
   protected ResourcesSelectionPage selectionPage;
   protected CopyrightSettings settings;
@@ -77,24 +77,23 @@ public class ApplyCopyrightWizard extends Wizard {
     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try {
       progressService.runInUI(progressService,
-          new IRunnableWithProgress() {
-            public void run(IProgressMonitor monitor) {
-              monitor.beginTask(Messages.ApplyCopyrightWizard_selectionTaskMessage,
-                                IProgressMonitor.UNKNOWN);
-              try {
-								selectionPage.setSelection(CopyrightManager.selectResources(settings, filesFilter, monitor));
-								settings.setChanged(false);
-	              monitor.done();
-							} catch (CopyrightException e) {
-	              monitor.done();
-					      MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error,
-                    										e.getMessage());
-							}
+        new IRunnableWithProgress() {
+          public void run(IProgressMonitor monitor) {
+            monitor.beginTask(Messages.ApplyCopyrightWizard_selectionTaskMessage,
+            		IProgressMonitor.UNKNOWN);
+            try {
+              selectionPage.setSelection(CopyrightManager.selectResources(settings, filesFilter, monitor));
+              settings.setChanged(false);
+              monitor.done();
+            } catch (CopyrightException e) {
+              monitor.done();
+              MessageDialog.openError(getShell(), Messages.ApplyCopyrightWizard_error, e.getMessage());
             }
-          },
-          null);
-    } catch (Exception e) {
-    }
+          }
+        },
+        null
+      );
+    } catch (Exception e) {}
   }
 
   /**

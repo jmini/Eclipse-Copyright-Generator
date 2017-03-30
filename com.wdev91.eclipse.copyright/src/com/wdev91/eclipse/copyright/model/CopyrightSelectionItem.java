@@ -41,16 +41,16 @@ public class CopyrightSelectionItem {
     return parent;
   }
 
-	public int getSelected() {
-		return selected;
-	}
+  public int getSelected() {
+    return selected;
+  }
 
-	public void setSelected(int selected) {
-		this.selected = selected;
-	}
+  public void setSelected(int selected) {
+    this.selected = selected;
+  }
 
-	@Override
-	public String toString() {
-		return resource.getName() + "," + selected;
-	}
+  @Override
+  public String toString() {
+    return resource.getName() + "," + selected;
+  }
 }

@@ -23,14 +23,14 @@ public class StringMatcher {
   private String segments[];
 
   /**
-   * StringMatcher constructor takes in a String object that is a simple 
+   * StringMatcher constructor takes in a String object that is a simple
    * pattern which may contain '*' for 0 and many characters and
-   * '?' for exactly one character.  
+   * '?' for exactly one character.
    *
-   * Literal '*' and '?' characters must be escaped in the pattern 
+   * Literal '*' and '?' characters must be escaped in the pattern
    * e.g., "\*" means literal "*", etc.
    *
-   * Escaping any other character (including the escape character itself), 
+   * Escaping any other character (including the escape character itself),
    * just results in that character in the pattern.
    * e.g., "\a" means "a" and "\\" means "\"
    *
@@ -48,12 +48,12 @@ public class StringMatcher {
     parseWildCards();
   }
 
-  /** 
+  /**
    * @param text a simple regular expression that may only contain '?'(s)
    * @param start the starting index in the text for search, inclusive
    * @param end the stopping point of search, exclusive
    * @param p a simple regular expression that may contain '?'
-   * @return the starting index in the text of the pattern , or -1 if not found 
+   * @return the starting index in the text of the pattern , or -1 if not found
    */
   private int findPosition(String text, int start, int end, String p) {
     boolean hasWildCard = p.indexOf(SINGLE_WILD_CARD) >= 0;
@@ -71,10 +71,10 @@ public class StringMatcher {
   }
 
   /**
-   * Given the starting (inclusive) and the ending (exclusive) positions in the   
-   * <code>text</code>, determine if the given substring matches with aPattern  
+   * Given the starting (inclusive) and the ending (exclusive) positions in the
+   * <code>text</code>, determine if the given substring matches with aPattern
    * @return true if the specified portion of the text matches the pattern
-   * @param text a String object that contains the substring to match 
+   * @param text a String object that contains the substring to match
    */
   public boolean match(String text) {
     if ( text == null )

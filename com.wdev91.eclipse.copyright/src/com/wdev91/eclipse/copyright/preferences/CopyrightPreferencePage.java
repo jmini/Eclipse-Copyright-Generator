@@ -77,18 +77,18 @@ public class CopyrightPreferencePage extends PreferencePage
    * Adds a new Copyright. An input dialog is opened to get the copyright label.
    */
   protected void addCopyright() {
-  	IInputValidator validator = new IInputValidator() {
-			 public String isValid(String newText) {
-				 String label = newText.trim();
-				 if ( label.length() == 0 ) {
-					 return Messages.CopyrightPreferencePage_err_noLabelProvided;
-				 }
-				 if ( input.exists(label) ) {
-					 return Messages.CopyrightPreferencePage_err_labelAlreadyExists;
-				 }
-				 return null;
-			 }
-		 };
+    IInputValidator validator = new IInputValidator() {
+	  public String isValid(String newText) {
+        String label = newText.trim();
+        if ( label.length() == 0 ) {
+          return Messages.CopyrightPreferencePage_err_noLabelProvided;
+        }
+        if ( input.exists(label) ) {
+          return Messages.CopyrightPreferencePage_err_labelAlreadyExists;
+        }
+        return null;
+      }
+    };
     InputDialog dialog = new InputDialog(this.getShell(),
     		Messages.CopyrightPreferencePage_inputTitle,
     		Messages.CopyrightPreferencePage_inputLabel,
@@ -264,13 +264,13 @@ public class CopyrightPreferencePage extends PreferencePage
   }
 
   @Override
-	protected void performDefaults() {
-  	ownerText.setText(Constants.EMPTY_STRING);
-  	input.defaults();
-		copyrightsList.refresh();
-		updateContent();
-		super.performDefaults();
-	}
+  protected void performDefaults() {
+    ownerText.setText(Constants.EMPTY_STRING);
+    input.defaults();
+    copyrightsList.refresh();
+    updateContent();
+    super.performDefaults();
+  }
 
 	/*
    * @see org.eclipse.jface.preference.PreferencePage#performOk()
@@ -280,13 +280,13 @@ public class CopyrightPreferencePage extends PreferencePage
     getPreferenceStore().setValue(Constants.PREFERENCES_OWNER, ownerText.getText().trim());
     updateContent();
     try {
-			input.save();
-		} catch (CopyrightException e) {
-			MessageDialog.openError(this.getShell(),
-															Messages.CopyrightPreferencePage_titleCopyrights,
-															e.getMessage());
-			return false;
-		}
+      input.save();
+    } catch (CopyrightException e) {
+      MessageDialog.openError(this.getShell(),
+    		  Messages.CopyrightPreferencePage_titleCopyrights,
+    		  e.getMessage());
+      return false;
+    }
     return true;
   }
 
@@ -297,10 +297,10 @@ public class CopyrightPreferencePage extends PreferencePage
     Copyright c = getSelection();
     if ( c != null ) {
       InputDialog dialog = new InputDialog(this.getShell(),
-                                           Messages.CopyrightPreferencePage_titleModify,
-                                           Messages.CopyrightPreferencePage_inputLabel,
-                                           c.getLabel(),
-                                           null);
+    		  Messages.CopyrightPreferencePage_titleModify,
+    		  Messages.CopyrightPreferencePage_inputLabel,
+    		  c.getLabel(),
+    		  null);
       if ( dialog.open() == InputDialog.OK ) {
         c.setLabel(dialog.getValue());
         copyrightsList.refresh(c);

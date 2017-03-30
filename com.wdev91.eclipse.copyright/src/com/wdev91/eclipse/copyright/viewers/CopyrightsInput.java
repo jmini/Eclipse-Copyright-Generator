@@ -24,9 +24,9 @@ public class CopyrightsInput {
   }
 
   public boolean addCopyright(Copyright copyright) {
-  	if ( exists(copyright.getLabel()) ) {
-  		return false;
-  	}
+    if ( exists(copyright.getLabel()) ) {
+      return false;
+    }
     copyrights.add(copyright);
     return true;
   }
@@ -36,7 +36,7 @@ public class CopyrightsInput {
   }
 
   public void defaults() {
-  	copyrights = CopyrightManager.getDefaultCopyrights();
+    copyrights = CopyrightManager.getDefaultCopyrights();
   }
 
   public boolean exists(String label) {

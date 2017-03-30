@@ -17,11 +17,19 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import com.wdev91.eclipse.copyright.Constants;
 
 public class HeaderFormat {
+  public static final String CT_CSOURCE = "org.eclipse.cdt.core.cSource"; //$NON-NLS-1$
+  public static final String CT_CHEADER = "org.eclipse.cdt.core.cHeader"; //$NON-NLS-1$
+  public static final String CT_CXXSOURCE = "org.eclipse.cdt.core.cxxSource"; //$NON-NLS-1$
+  public static final String CT_CXXHEADER = "org.eclipse.cdt.core.cxxHeader"; //$NON-NLS-1$
   public static final String CT_JAVA = "org.eclipse.jdt.core.javaSource"; //$NON-NLS-1$
   public static final String CT_XML = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
 
-  public static final HeaderFormat TEXT_HEADER;
+  public static final HeaderFormat CSOURCE_HEADER;
+  public static final HeaderFormat CHEADER_HEADER;
+  public static final HeaderFormat CXXSOURCE_HEADER;
+  public static final HeaderFormat CXXHEADER_HEADER;
   public static final HeaderFormat JAVA_HEADER;
+  public static final HeaderFormat TEXT_HEADER;
   public static final HeaderFormat XML_HEADER;
 
   protected String contentId;
@@ -37,11 +45,32 @@ public class HeaderFormat {
   protected Pattern pattern = null;
 
   static {
-    TEXT_HEADER = new HeaderFormat(
-        IContentTypeManager.CT_TEXT, false,
-        "#-------------------------------------------------------------------------------", //$NON-NLS-1$
-        "# ", //$NON-NLS-1$
-        "#-------------------------------------------------------------------------------", //$NON-NLS-1$
+    CSOURCE_HEADER = new HeaderFormat(
+		CT_CSOURCE, false,
+        "/*******************************************************************************", //$NON-NLS-1$
+        " * ", //$NON-NLS-1$
+        " ******************************************************************************/", //$NON-NLS-1$
+        0, false, false, null);
+
+    CHEADER_HEADER = new HeaderFormat(
+		CT_CHEADER, false,
+        "/*******************************************************************************", //$NON-NLS-1$
+        " * ", //$NON-NLS-1$
+        " ******************************************************************************/", //$NON-NLS-1$
+        0, false, false, null);
+
+    CXXSOURCE_HEADER = new HeaderFormat(
+		CT_CXXSOURCE, false,
+        "////////////////////////////////////////////////////////////////////////////////", //$NON-NLS-1$
+        "// ", //$NON-NLS-1$
+        "////////////////////////////////////////////////////////////////////////////////", //$NON-NLS-1$
+        0, true, false, null);
+
+    CXXHEADER_HEADER = new HeaderFormat(
+		CT_CXXHEADER, false,
+        "////////////////////////////////////////////////////////////////////////////////", //$NON-NLS-1$
+        "// ", //$NON-NLS-1$
+        "////////////////////////////////////////////////////////////////////////////////", //$NON-NLS-1$
         0, true, false, null);
 
     JAVA_HEADER = new HeaderFormat(
@@ -50,6 +79,13 @@ public class HeaderFormat {
         " * ", //$NON-NLS-1$
         " ******************************************************************************/", //$NON-NLS-1$
         0, false, false, null);
+
+    TEXT_HEADER = new HeaderFormat(
+        IContentTypeManager.CT_TEXT, false,
+        "#-------------------------------------------------------------------------------", //$NON-NLS-1$
+        "# ", //$NON-NLS-1$
+        "#-------------------------------------------------------------------------------", //$NON-NLS-1$
+        0, true, false, null);
 
     XML_HEADER = new HeaderFormat(
         CT_XML, false,
@@ -64,9 +100,9 @@ public class HeaderFormat {
   }
 
   private HeaderFormat(String contentId, boolean excluded, String beginLine,
-  		String linePrefix, String endLine, int postBlankLines,
-  		boolean lineCommentFormat, boolean preserveFirstLine,
-  		String firstLinePattern) {
+		  String linePrefix, String endLine, int postBlankLines,
+		  boolean lineCommentFormat, boolean preserveFirstLine,
+		  String firstLinePattern) {
     this.contentId = contentId;
     this.excluded = excluded;
     this.beginLine = beginLine;
@@ -81,29 +117,29 @@ public class HeaderFormat {
   @Override
   protected Object clone() {
     return new HeaderFormat(this.contentId, this.excluded, this.beginLine,
-    												this.linePrefix, this.endLine, this.postBlankLines,
-                            this.lineCommentFormat, this.preserveFirstLine,
-                            this.firstLinePattern);
+    		this.linePrefix, this.endLine, this.postBlankLines,
+    		this.lineCommentFormat, this.preserveFirstLine,
+    		this.firstLinePattern);
   }
 
   static HeaderFormat createExcluded(String contentId) {
-  	HeaderFormat format = new HeaderFormat(contentId);
-  	format.setExcluded(true);
-  	return format;
+    HeaderFormat format = new HeaderFormat(contentId);
+    format.setExcluded(true);
+    return format;
   }
 
   @Override
-	public boolean equals(Object obj) {
-		return (obj instanceof HeaderFormat)
-					 ? ((HeaderFormat) obj).getContentId().equals(this.contentId)
-					 : false;
-	}
+  public boolean equals(Object obj) {
+    return (obj instanceof HeaderFormat)
+    		? ((HeaderFormat) obj).getContentId().equals(this.contentId)
+    				: false;
+  }
 
-	public boolean isExcluded() {
-		return excluded;
-	}
+  public boolean isExcluded() {
+    return excluded;
+  }
 
-	public boolean isLineCommentFormat() {
+  public boolean isLineCommentFormat() {
     return lineCommentFormat;
   }
 
@@ -120,10 +156,10 @@ public class HeaderFormat {
   }
 
   public String getFirstLinePattern() {
-		return firstLinePattern;
-	}
+    return firstLinePattern;
+  }
 
-	public String getLinePrefix() {
+  public String getLinePrefix() {
     return linePrefix;
   }
 
@@ -136,10 +172,10 @@ public class HeaderFormat {
   }
 
   public void setExcluded(boolean excluded) {
-		this.excluded = excluded;
-	}
+    this.excluded = excluded;
+  }
 
-	public void setLineCommentFormat(boolean lineCommentFormat) {
+  public void setLineCommentFormat(boolean lineCommentFormat) {
     this.lineCommentFormat = lineCommentFormat;
   }
 
@@ -152,11 +188,11 @@ public class HeaderFormat {
   }
 
   public void setFirstLinePattern(String firstLinePattern) {
-		this.firstLinePattern = firstLinePattern;
-		pattern = null;
-	}
+    this.firstLinePattern = firstLinePattern;
+    pattern = null;
+  }
 
-	public void setLinePrefix(String linePrefix) {
+  public void setLinePrefix(String linePrefix) {
     this.linePrefix = linePrefix;
   }
 
@@ -166,24 +202,24 @@ public class HeaderFormat {
 
   public void setPreserveFirstLine(boolean preserveFirstLine) {
     this.preserveFirstLine = preserveFirstLine;
-		pattern = null;
+    pattern = null;
   }
 
   public boolean skipFirstLine(String line) {
-  	if ( preserveFirstLine ) {
-  		if ( firstLinePattern != null ) {
-  			if ( pattern == null ) {
-  				pattern = Pattern.compile(firstLinePattern);
-  			}
-  			return pattern.matcher(line).matches();
-  		}
- 			return true;
-  	}
-  	return false;
+    if ( preserveFirstLine ) {
+      if ( firstLinePattern != null ) {
+        if ( pattern == null ) {
+          pattern = Pattern.compile(firstLinePattern);
+        }
+        return pattern.matcher(line).matches();
+      }
+      return true;
+    }
+    return false;
   }
 
   @Override
-	public String toString() {
-		return this.getContentId();
-	}
+  public String toString() {
+    return this.getContentId();
+  }
 }

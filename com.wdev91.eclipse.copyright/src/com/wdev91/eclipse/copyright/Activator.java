@@ -18,19 +18,19 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 	/** The plug-in ID */
-	public static final String PLUGIN_ID = "com.wdev91.eclipse.copyright"; //$NON-NLS-1$
+  public static final String PLUGIN_ID = "com.wdev91.eclipse.copyright"; //$NON-NLS-1$
 
   // The shared instance
   private static Activator plugin;
 
   /**
-	 * The constructor
-	 */
-	public Activator() {
+   * The constructor
+   */
+  public Activator() {
     plugin = this;
-	}
+  }
 
-	/**
+  /**
    * Returns the shared instance
    *
    * @return the shared instance
@@ -40,21 +40,21 @@ public class Activator extends AbstractUIPlugin {
   }
 
   /*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+   * (non-Javadoc)
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
-	@Override
-	public void stop(BundleContext context) throws Exception {
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void stop(BundleContext context) throws Exception {
     plugin = null;
-		super.stop(context);
-	}
+    super.stop(context);
+  }
 }

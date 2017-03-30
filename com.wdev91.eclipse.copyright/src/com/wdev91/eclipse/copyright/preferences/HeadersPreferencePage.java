@@ -29,10 +29,10 @@ import com.wdev91.eclipse.copyright.model.CopyrightManager;
 import com.wdev91.eclipse.copyright.model.HeaderFormat;
 
 public class HeadersPreferencePage extends PreferencePage implements
-    IWorkbenchPreferencePage {
-	public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_formats"; //$NON-NLS-1$
+  IWorkbenchPreferencePage {
+  public static final String CONTEXT_ID = Activator.PLUGIN_ID + ".prefs_formats"; //$NON-NLS-1$
 
-	private FormatsPanel formats;
+  private FormatsPanel formats;
 
   public HeadersPreferencePage() {
     super();
@@ -47,27 +47,26 @@ public class HeadersPreferencePage extends PreferencePage implements
     return formats;
   }
 
-  public void init(IWorkbench workbench) {
+  public void init(IWorkbench workbench) {}
+
+  @Override
+  protected void performDefaults() {
+    formats.setFormats(CopyrightManager.getDefaultHeadersFormats());
+    super.performDefaults();
   }
 
-	@Override
-	protected void performDefaults() {
-		formats.setFormats(CopyrightManager.getDefaultHeadersFormats());
-		super.performDefaults();
-	}
-
-	@Override
+  @Override
   public boolean performOk() {
     Collection<HeaderFormat> headerFormats = formats.getFormats();
     for (HeaderFormat format : headerFormats) {
       if ( ! format.isExcluded()
-      		 && ( format.getBeginLine().trim().length() == 0
-                || format.getEndLine().trim().length() == 0) ) {
+    		  && ( format.getBeginLine().trim().length() == 0
+    		  || format.getEndLine().trim().length() == 0) ) {
         MessageDialog.openError(getShell(), Messages.HeadersPreferencePage_errorTitle,
-                                NLS.bind(Messages.HeadersPreferencePage_errorInvalidHeaderFormat,
-                                    Platform.getContentTypeManager()
-                                            .getContentType(format.getContentId())
-                                            .getName()));
+        		NLS.bind(Messages.HeadersPreferencePage_errorInvalidHeaderFormat,
+        				Platform.getContentTypeManager()
+        				.getContentType(format.getContentId())
+        				.getName()));
         return false;
       }
     }
