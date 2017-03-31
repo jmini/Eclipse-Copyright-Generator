@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.wdev91.eclipse.copyright.feature_1.5.0.jar" id="com.wdev91.eclipse.copyright.feature" version="1.5.0"/>
+</site>
