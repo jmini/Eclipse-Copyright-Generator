@@ -1,0 +1,68 @@
+:experimental:
+:github-readme: ../README.adoc
+
+include::{github-readme}[tags=vardef]
+
+:projectpage: https://github.com/{git-repository}
+:bintray: https://bintray.com/jmini/Eclipse-Copyright-Generator
+
+include::{github-readme}[tags=header]
+
+== URLs
+
+* link:{homepage}[Project home] (this page)
+* link:{projectpage}[GitHub project]
+* link:{bintray}[P2 repository on Bintray]
+* link:{issues}[Issue tracker]
+
+TIP: Do you want to improve this page? Please git-link:self[edit it on GitHub].
+
+include::{github-readme}[tags=description]
+
+=== Installation
+
+Use the P2 Repository hosted on Bintray:
+
+----
+https://dl.bintray.com/jmini/Eclipse-Copyright-Generator/
+----
+
+In your Eclipse IDE, just select menu:Help[Install New Software...].
+Enter the P2 Update Site URL in the _Work with_ field and select the _Copyright Wizard_ in the list.
+
+image::install.png[Install New Software windows]
+
+=== Usage
+
+==== Project menu
+
+Open the "menu:Project[Apply copyright...]" menu.
+
+image::menu.png[Apply copyright menu]
+
+
+==== Step 1
+
+In the first step, you select the projects where you want to add the copyright headers.
+
+image::step1.png[Wizard Step 1]
+
+
+==== Step 2
+
+In the second step, you can select the license notice you want to apply.
+
+image::step2.png[Wizard Step 2]
+
+
+==== Step 3
+
+In the third step, you can select precisely which files will be modified.
+
+image::step3.png[Wizard Step 3]
+
+
+include::{github-readme}[tags=contact-section]
+
+include::{github-readme}[tags=license-section]
+

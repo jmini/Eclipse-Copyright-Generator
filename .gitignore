@@ -17,3 +17,6 @@ hs_err_pid*
 # P2 Update Site project
 /com.wdev91.eclipse.copyright.site/features/
 /com.wdev91.eclipse.copyright.site/plugins/
+
+# Maven
+target/

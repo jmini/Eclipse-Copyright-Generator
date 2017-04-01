@@ -1,0 +1,43 @@
+//tag::vardef[]
+:gh-repo-owner: jmini
+:gh-repo-name: Eclipse-Copyright-Generator
+
+:project-name: Eclipse Copyright Generator
+:git-branch: master
+:twitter-handle: j2r2b
+:license: http://www.eclipse.org/legal/epl-v10.html
+:license-name: Eclipse Public License - v 1.0
+
+:git-repository: {gh-repo-owner}/{gh-repo-name}
+:homepage: https://{gh-repo-owner}.github.io/{gh-repo-name}
+:issues: https://github.com/{git-repository}/issues
+//end::vardef[]
+
+//tag::header[]
+= {project-name}
+Plugin for Eclipse IDE to add and manage copyright headers at the beginning of the source files
+//end::header[]
+
+//tag::description[]
+== Description
+Fork of the link:http://sourceforge.net/projects/eclipsecopyrigh/[Eclipse Copyright Generator project] on sourceforge.
+
+Initial work by Eric Wuillai.
+Contributors: Jeremie Bresson, Matthew Krupcale.
+
+//end::description[]
+Read more about installation, usage on the link:{homepage}[project home page].
+
+//tag::contact-section[]
+== Get in touch
+
+Use the link:{issues}[{project-name} issue tracker] on GitHub.
+
+You can also contact me on Twitter: link:https://twitter.com/{twitter-handle}[@{twitter-handle}]
+//end::contact-section[]
+
+//tag::license-section[]
+== License
+
+link:{license}[{license-name}]
+//end::license-section[]
