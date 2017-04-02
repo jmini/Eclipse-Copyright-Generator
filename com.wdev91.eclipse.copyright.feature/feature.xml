@@ -2,7 +2,7 @@
 <feature
       id="com.wdev91.eclipse.copyright.feature"
       label="%featureName"
-      version="1.5.0"
+      version="1.5.1"
       provider-name="%providerName">
 
    <description>
@@ -52,19 +52,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <import plugin="org.eclipse.core.resources" version="3.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.help"/>
    </requires>
 
    <plugin
          id="com.wdev91.eclipse.copyright"
          download-size="88"
          install-size="88"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.help"
-         download-size="0"
-         install-size="0"
          version="0.0.0"
          unpack="false"/>
 
