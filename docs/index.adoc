@@ -17,6 +17,8 @@ include::{github-readme}[tags=header]
 
 TIP: Do you want to improve this page? Please git-link:self[edit it on GitHub].
 
+Current version: {last-released-version}
+
 include::{github-readme}[tags=description]
 
 === Installation

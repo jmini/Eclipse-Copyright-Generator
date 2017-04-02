@@ -2,7 +2,7 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.jmini.jxlint</groupId>
+    <groupId>com.wdev91.eclipse.copyright</groupId>
     <artifactId>root</artifactId>
     <version>1.5.1</version>
     <packaging>pom</packaging>
@@ -71,6 +71,7 @@
                         <docinfo1>true</docinfo1>
                         <sourcedir>${project.build.sourceDirectory}</sourcedir>
                         <project-version>${project.version}</project-version>
+                        <last-released-version>${project.version}</last-released-version>
                     </attributes>
                 </configuration>
                 <executions>
