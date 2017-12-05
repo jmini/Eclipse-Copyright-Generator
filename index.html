@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.4">
-<meta name="author" content="Plugin for Eclipse IDE to add and manage copyright headers at the beginning of the source files">
-<title>Eclipse Copyright Generator</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
-<style>
+ <head>
+  <meta charset="UTF-8">
+  <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Asciidoctor 1.5.4">
+  <meta name="author" content="Plugin for Eclipse IDE to add and manage copyright headers at the beginning of the source files">
+  <title>Eclipse Copyright Generator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+  <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove comment around @import statement below when using as a custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
@@ -417,8 +417,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-<style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <style>
 /* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
 /*pre.CodeRay {background-color:#f7f7f8;}*/
 .CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
@@ -509,154 +509,444 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .change .change{color:#66f}
 .CodeRay .head .head{color:#f4f}
 </style>
-</head>
-<body class="article">
-<div id="header">
-<h1>Eclipse Copyright Generator</h1>
-<div class="details">
-<span id="author" class="author">Plugin for Eclipse IDE to add and manage copyright headers at the beginning of the source files</span><br>
-</div>
-</div>
-<div id="content">
-<div class="sect1">
-<h2 id="urls"><a class="anchor" href="#urls"></a>URLs</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://jmini.github.io/Eclipse-Copyright-Generator">Project home</a> (this page)</p>
-</li>
-<li>
-<p><a href="https://github.com/jmini/Eclipse-Copyright-Generator">GitHub project</a></p>
-</li>
-<li>
-<p><a href="https://bintray.com/jmini/Eclipse-Copyright-Generator">P2 repository on Bintray</a></p>
-</li>
-<li>
-<p><a href="https://github.com/jmini/Eclipse-Copyright-Generator/issues">Issue tracker</a></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Do you want to improve this page? Please <a href="https://github.com/jmini/Eclipse-Copyright-Generator/blob/master/docs/index.adoc">edit it on GitHub</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Current version: 1.5.1</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="description"><a class="anchor" href="#description"></a>Description</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Fork of the <a href="http://sourceforge.net/projects/eclipsecopyrigh/">Eclipse Copyright Generator project</a> on sourceforge.</p>
-</div>
-<div class="paragraph">
-<p>Initial work by Eric Wuillai.
-Contributors: Jeremie Bresson, Matthew Krupcale.</p>
-</div>
-<div class="sect2">
-<h3 id="installation"><a class="anchor" href="#installation"></a>Installation</h3>
-<div class="paragraph">
-<p>Use the P2 Repository hosted on Bintray:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>https://dl.bintray.com/jmini/Eclipse-Copyright-Generator/</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In your Eclipse IDE, just select <span class="menuseq"><span class="menu">Help</span>&#160;&#9656; <span class="menuitem">Install New Software&#8230;&#8203;</span></span>.
-Enter the P2 Update Site URL in the <em>Work with</em> field and select the <em>Copyright Wizard</em> in the list.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="install.png" alt="Install New Software windows">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="usage"><a class="anchor" href="#usage"></a>Usage</h3>
-<div class="sect3">
-<h4 id="project-menu"><a class="anchor" href="#project-menu"></a>Project menu</h4>
-<div class="paragraph">
-<p>Open the "<span class="menuseq"><span class="menu">Project</span>&#160;&#9656; <span class="menuitem">Apply copyright&#8230;&#8203;</span></span>" menu.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="menu.png" alt="Apply copyright menu">
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="step-1"><a class="anchor" href="#step-1"></a>Step 1</h4>
-<div class="paragraph">
-<p>In the first step, you select the projects where you want to add the copyright headers.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="step1.png" alt="Wizard Step 1">
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="step-2"><a class="anchor" href="#step-2"></a>Step 2</h4>
-<div class="paragraph">
-<p>In the second step, you can select the license notice you want to apply.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="step2.png" alt="Wizard Step 2">
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="step-3"><a class="anchor" href="#step-3"></a>Step 3</h4>
-<div class="paragraph">
-<p>In the third step, you can select precisely which files will be modified.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="step3.png" alt="Wizard Step 3">
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="get-in-touch"><a class="anchor" href="#get-in-touch"></a>Get in touch</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Use the <a href="https://github.com/jmini/Eclipse-Copyright-Generator/issues">Eclipse Copyright Generator issue tracker</a> on GitHub.</p>
-</div>
-<div class="paragraph">
-<p>You can also contact me on Twitter: <a href="https://twitter.com/j2r2b">@j2r2b</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="license"><a class="anchor" href="#license"></a>License</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License - v 1.0</a></p>
-</div>
-</div>
-</div>
-</div>
-<div id="footer">
-<div id="footer-text">
-Last updated 2017-04-02 22:51:00 CEST
-</div>
-</div>
-</body>
+ </head>
+ <body class="article toc2 toc-left">
+  <div id="header">
+   <h1>Eclipse Copyright Generator</h1>
+   <div class="details">
+    <span id="author" class="author">Plugin for Eclipse IDE to add and manage copyright headers at the beginning of the source files</span>
+    <br>
+   </div>
+   <div id="toc" class="toc2">
+    <div id="toctitle">
+     Table of Contents
+    </div>
+    <ul class="sectlevel1">
+     <li><a href="#urls">URLs</a></li>
+     <li><a href="#description">Description</a>
+      <ul class="sectlevel2">
+       <li><a href="#installation">Installation</a></li>
+       <li><a href="#usage">Usage</a>
+        <ul class="sectlevel3">
+         <li><a href="#copyright-wizard">Copyright wizard</a></li>
+         <li><a href="#project-copyright-properties-page">Project copyright properties page</a></li>
+         <li><a href="#copyright-preference-page">Copyright preference page</a></li>
+         <li><a href="#headers-formats-preference-page">Headers formats preference page</a></li>
+        </ul> </li>
+      </ul> </li>
+     <li><a href="#get-in-touch">Get in touch</a></li>
+     <li><a href="#license">License</a></li>
+    </ul>
+   </div>
+  </div>
+  <div id="content">
+   <div class="sect1">
+    <h2 id="urls"><a class="anchor" href="#urls"></a>URLs</h2>
+    <div class="sectionbody">
+     <div class="ulist">
+      <ul>
+       <li> <p><a href="https://jmini.github.io/Eclipse-Copyright-Generator">Project home</a> (this page)</p> </li>
+       <li> <p><a href="https://github.com/jmini/Eclipse-Copyright-Generator">GitHub project</a></p> </li>
+       <li> <p><a href="https://bintray.com/jmini/Eclipse-Copyright-Generator">P2 repository on Bintray</a></p> </li>
+       <li> <p><a href="https://github.com/jmini/Eclipse-Copyright-Generator/issues">Issue tracker</a></p> </li>
+      </ul>
+     </div>
+     <div class="admonitionblock tip">
+      <table>
+       <tbody>
+        <tr>
+         <td class="icon"> <i class="fa icon-tip" title="Tip"></i> </td>
+         <td class="content"> Do you want to improve this page? Please <a href="https://github.com/jmini/Eclipse-Copyright-Generator/blob/master/docs/src/index.adoc">edit it on GitHub</a>. </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="paragraph">
+      <p>Current version: 1.5.2</p>
+     </div>
+    </div>
+   </div>
+   <div class="sect1">
+    <h2 id="description"><a class="anchor" href="#description"></a>Description</h2>
+    <div class="sectionbody">
+     <div class="paragraph">
+      <p>Fork of the <a href="http://sourceforge.net/projects/eclipsecopyrigh/">Eclipse Copyright Generator project</a> on sourceforge.</p>
+     </div>
+     <div class="paragraph">
+      <p>Initial work by Eric Wuillai. Contributors: Jeremie Bresson, Matthew Krupcale.</p>
+     </div>
+     <div class="sect2">
+      <h3 id="installation"><a class="anchor" href="#installation"></a>Installation</h3>
+      <div class="paragraph">
+       <p>Use the P2 Repository hosted on Bintray:</p>
+      </div>
+      <div class="listingblock">
+       <div class="content">
+        <pre>https://dl.bintray.com/jmini/Eclipse-Copyright-Generator/</pre>
+       </div>
+      </div>
+      <div class="paragraph">
+       <p>In your Eclipse IDE, just select <span class="menuseq"><span class="menu">Help</span>&nbsp;&#x25b8; <span class="menuitem">Install New Software&#x2026;&#x200b;</span></span>. Enter the P2 Update Site URL in the <em>Work with</em> field and select the <em>Copyright Wizard</em> in the list.</p>
+      </div>
+      <div class="imageblock">
+       <div class="content">
+        <img src="images/install.png" alt="Install New Software windows">
+       </div>
+      </div>
+     </div>
+     <div class="sect2">
+      <h3 id="usage"><a class="anchor" href="#usage"></a>Usage</h3>
+      <div class="sect3">
+       <h4 id="copyright-wizard"><a class="anchor" href="#copyright-wizard"></a>Copyright wizard</h4>
+       <div class="paragraph">
+        <p>The wizard is launched from the menu: <strong>Project &#x2192; Copyright Wizard&#x2026;&#x200b;</strong></p>
+       </div>
+       <div class="imageblock">
+        <div class="content">
+         <img src="images/menu.png" alt="Apply copyright menu">
+        </div>
+       </div>
+       <div class="sect4">
+        <h5 id="first-page-projects-selection"><a class="anchor" href="#first-page-projects-selection"></a>First page - Projects selection</h5>
+        <div class="paragraph">
+         <p>The first page of the wizard lets you select one or more projects on which to apply the copyright.</p>
+        </div>
+        <div class="imageblock">
+         <div class="content">
+          <img src="images/step1.png" alt="Wizard Step 1">
+         </div>
+        </div>
+        <table class="tableblock frame-all grid-all spread">
+         <colgroup>
+          <col style="width: 50%;">
+          <col style="width: 50%;">
+         </colgroup>
+         <thead>
+          <tr>
+           <th class="tableblock halign-left valign-top">Parameter</th>
+           <th class="tableblock halign-left valign-top">Description</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Projects selection list</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Projects having copyright settings are marked in the selection list by a "(C)" postfix on the projet name.</p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Override projects copyright settings</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">If checked, all projects copyright settings (headers text and formats) defined on selected projects will be override by the settings defined in the following page of the wizard.</p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Override only the header comment text</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">This checkbox is enabled only if the previous one is checked. If checked, the override of project copyright settings is limited to the header comment text. All the header formats defined in the projects preferences will be used by the wizard for the corresponding projects.</p></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <div class="sect4">
+        <h5 id="second-page-copyright-parameters"><a class="anchor" href="#second-page-copyright-parameters"></a>Second page - Copyright parameters</h5>
+        <div class="paragraph">
+         <p>The second page of the wizard lets you define the parameters of copyright to be applied to the selected projects. It is possible to define a completely specific copyright, or select a preconfigured copyright in the preferences of the wizard.</p>
+        </div>
+        <div class="imageblock">
+         <div class="content">
+          <img src="images/step2.png" alt="Wizard Step 2">
+         </div>
+        </div>
+        <table class="tableblock frame-all grid-all spread">
+         <colgroup>
+          <col style="width: 50%;">
+          <col style="width: 50%;">
+         </colgroup>
+         <thead>
+          <tr>
+           <th class="tableblock halign-left valign-top">Parameter</th>
+           <th class="tableblock halign-left valign-top">Description</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Copyright type</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Selection list of copyright to apply. This list allows you to select one of the preconfigured copyrights in the preferences, or to choose the definition of a specific copyright (--- Custom copyright ---). </p><p class="tableblock"><span class="image"><img src="images/guide04.png" alt="guide04"></span></p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Copyright header text</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Text of comment header to be applied to the selected files. This field is pre-initialized with the text defined in preferences for the selected copyright. It may, however, be changed if desired. </p><p class="tableblock"><span class="image"><img src="images/guide05.png" alt="guide05"></span> </p><p class="tableblock">The text should not contain formatting comment characters.</p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Include files</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Pattern of filenames on which apply the comment header. If leaved empty, it is equivalent to "*" and all resources will be selected. It is possible to give several patterns, separated by commas. Then all resources corresponding at least to one of the patterns will be selected. </p><p class="tableblock"><span class="image"><img src="images/guide06.png" alt="guide06"></span></p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Exclude files</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Pattern of filenames to exclude from the selection defined by the include pattern. If leaved empty, there is no exclusion. It is possible to give several patterns, separated by commas. Then all resources corresponding at least to one of the patterns will be excluded. </p><p class="tableblock"><span class="image"><img src="images/guide11.png" alt="guide11"></span></p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Replace existing headers</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">This flag is used to indicate whether the wizard will replace the existing header files (checked) or if they should not be modified (unchecked). The recognition of the existence of a header comment in a file is made by comparing the 5 first characters in the first line of the file (or the second one if the parameter "Do not override the first line" is checked in the corresponding format) with the 5 first characters of the first line defined in the header comment format.</p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Add license file if not exists</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">This flag allows you to add to selected projects a license file if no file with the same name already exists. This parameter is usable only for preconfigured copyrights having a license file defined.</p></td>
+          </tr>
+          <tr>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">License file</p></td>
+           <td class="tableblock halign-left valign-top"><p class="tableblock">Name and path of the license file to create. This parameter is used only if the previous parameter has been selected. It is initialized by the file name defined in preferences settings for the selected copyright.</p></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <div class="sect4">
+        <h5 id="third-page-files-selection"><a class="anchor" href="#third-page-files-selection"></a>Third page - Files selection</h5>
+        <div class="paragraph">
+         <p>The wizard filters with the files patterns the files on which to apply the comment header. If the "Replace existing headers" has been checked, the files containing already a comment header are eligible for treatment. Otherwise they are also excluded from the pre-selection.</p>
+        </div>
+        <div class="paragraph">
+         <p>The last page of the wizard enables you to refine the selection. It presents the files filtered by the wizard.</p>
+        </div>
+        <div class="imageblock">
+         <div class="content">
+          <img src="images/step3.png" alt="Wizard Step 3">
+         </div>
+        </div>
+        <div class="paragraph">
+         <p>The user has the possibility to unselect files or directories on which apply the comment header. In the previous screenshot, files <code>config.properties</code> and <code>Sample2.java</code> were unselected and will therefore not be treated.</p>
+        </div>
+        <div class="paragraph">
+         <p>Finally click on <strong>Finish</strong> to start treatment on the selected files.</p>
+        </div>
+        <div class="paragraph">
+         <p>Example Java file before treatment:</p>
+        </div>
+        <div class="imageblock">
+         <div class="content">
+          <img src="images/guide09.png" alt="guide09">
+         </div>
+        </div>
+        <div class="paragraph">
+         <p>Example Java file after treatment:</p>
+        </div>
+        <div class="imageblock">
+         <div class="content">
+          <img src="images/guide10.png" alt="guide10">
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="sect3">
+       <h4 id="project-copyright-properties-page"><a class="anchor" href="#project-copyright-properties-page"></a>Project copyright properties page</h4>
+       <div class="paragraph">
+        <p>Copyright settings can be defined at the level of each project too, in the project properties. When defined, those settings are applied by default by the copyright wizard.</p>
+       </div>
+       <div class="paragraph">
+        <p>To define project settings, open the project properties dialog and select the Copyright category. The properties page displayed contains two tabs.</p>
+       </div>
+       <div class="imageblock">
+        <div class="content">
+         <img src="images/guide20.png" alt="guide20">
+        </div>
+       </div>
+       <div class="paragraph">
+        <p>Copyright settings are disabled by default. To enable, select the <strong>'Enable project specific settings'</strong> checkbox. When enabled, a popup message is displayed proposing to import in the project settings the header formats definitions of the workspace. If you respond No, you will have to define all the header format, including the root Text content type.</p>
+       </div>
+       <div class="imageblock">
+        <div class="content">
+         <img src="images/guide21.png" alt="guide21">
+        </div>
+       </div>
+       <div class="paragraph">
+        <p>When project settings are selected, the two tabs are enabled:</p>
+       </div>
+       <div class="ulist">
+        <ul>
+         <li> <p><strong>Header text</strong>- The first tab allows one to define the header text that will be used by default for all the files in the project on which the wizard will apply a copyright. The same substitution variables that are in workspace preferences can be used here.</p> </li>
+         <li> <p><strong>Header formats</strong>- The second tab allows one to define the header comment format for all the content types deriving of the root Text type. This tab works exactly as the workspace preferences one.</p> </li>
+        </ul>
+       </div>
+       <div class="paragraph">
+        <p>The project copyright settings are saved in a file stored in the .settings directory of the project. Then this file can be saved in a SCM tool like CVS or Subversion and shared by a team.</p>
+       </div>
+      </div>
+      <div class="sect3">
+       <h4 id="copyright-preference-page"><a class="anchor" href="#copyright-preference-page"></a>Copyright preference page</h4>
+       <div class="paragraph">
+        <p>The Copyright parameters allows one to define a set of standard licenses, including the text to be placed in the comment header of files, as well as a license file to add to the projects.</p>
+       </div>
+       <div class="imageblock">
+        <div class="content">
+         <img src="images/config02.png" alt="config02">
+        </div>
+       </div>
+       <table class="tableblock frame-all grid-all spread">
+        <colgroup>
+         <col style="width: 50%;">
+         <col style="width: 50%;">
+        </colgroup>
+        <thead>
+         <tr>
+          <th class="tableblock halign-left valign-top">Parameter</th>
+          <th class="tableblock halign-left valign-top">Description</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Owner</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the value of the substitution variable <code>${owner}</code>. If not defined, it will take by default the same value that <code>${user}</code> variable.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Licenses</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">List of pre-configured licenses. Selecting an item on this list updates the fields in tabs.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Header text</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Tab to define the text of the comment to be placed in the header of files. This text may contain substitution variables, which will be replaced by their values at the time of insertion of the comment in each target file. The text of the comment is defined line by line. It should not contain comment format characters specific to a file type (eg. <code>/* */</code>). </p><p class="tableblock">The usable substitution variables are: </p><p class="tableblock"><code>${owner}</code> - Value of the owner parameter </p><p class="tableblock"><code>${user}</code> - The OS user name </p><p class="tableblock"><code>${year}</code> - The current year </p><p class="tableblock"><code>${file_name}</code> - Name of the file on which the header is applied </p><p class="tableblock"><code>${file_absolute_path}</code> - Absolute path of the file on which the header is applied </p><p class="tableblock"><code>${file_path}</code> - Path of the file on which the header is applied, relative to the project root </p><p class="tableblock"><code>${project_name}</code> - Name of the project containing the file on which the header is applied</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">License file</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Tab to set the (optional) license file to add to the projects.</p></td>
+         </tr>
+        </tbody>
+       </table>
+       <div class="paragraph">
+        <p>The <strong>License file</strong> tab allows you to associate a license file to a copyright definition:</p>
+       </div>
+       <div class="paragraph">
+        <p><span class="image"><img src="images/config03.png" alt="config03"></span></p>
+       </div>
+       <table class="tableblock frame-all grid-all spread">
+        <colgroup>
+         <col style="width: 50%;">
+         <col style="width: 50%;">
+        </colgroup>
+        <thead>
+         <tr>
+          <th class="tableblock halign-left valign-top">Parameter</th>
+          <th class="tableblock halign-left valign-top">Description</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">File name</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Default name of the license file. The file name may be changed if desired by the user within the parameters of the wizard.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">File content</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Text of the license. If the wanted file format is formatted, such as HTML, the text must contain all the formatting tags. The contents of the file is not interpreted, so the substitution variables do not apply here.</p></td>
+         </tr>
+        </tbody>
+       </table>
+       <div class="paragraph">
+        <p>The plugin is preconfigured with headers and licenses files for several open source licenses: Apache, Boost, BSD, (A)GPL, LGPL, MIT, and Mozilla. It is possible to add, change or delete any copyrights with the buttons Add, Modify, and Delete:</p>
+       </div>
+       <div class="ulist">
+        <ul>
+         <li> <p>Add - Add a new Copyright. A dialog box opens for the input of the label text under which the Copyright will be registered.</p>
+          <div class="paragraph">
+           <p><span class="image"><img src="images/config04.png" alt="config04"></span></p>
+          </div> </li>
+         <li> <p>Modify - Changing the label text of the copyright selected from the list.</p> </li>
+         <li> <p>Delete - Remove the copyright selected from the list.</p> </li>
+        </ul>
+       </div>
+       <div class="paragraph">
+        <p>The <strong>'Restore Defaults'</strong> button will reload the default copyrights configuration file provided with the plug-in. All custom texts and copyrights will be lost.</p>
+       </div>
+      </div>
+      <div class="sect3">
+       <h4 id="headers-formats-preference-page"><a class="anchor" href="#headers-formats-preference-page"></a>Headers formats preference page</h4>
+       <div class="paragraph">
+        <p>The Header formats parameters are used to define the applicable format of comment on headers for different types of files. The recognition of the type of file is based on the Eclipse ContentType.</p>
+       </div>
+       <div class="paragraph">
+        <p>The formats apply only on the content in text format. If a format is not set on a ContentType, it inherits the format of its parent, and so on recursively until basic type Text.</p>
+       </div>
+       <div class="imageblock">
+        <div class="content">
+         <img src="images/config05.png" alt="config05">
+        </div>
+       </div>
+       <div class="paragraph">
+        <p>To define a particular format on a file type, select the correspondent ContentType in the tree, and enter the definition of the format:</p>
+       </div>
+       <table class="tableblock frame-all grid-all spread">
+        <colgroup>
+         <col style="width: 50%;">
+         <col style="width: 50%;">
+        </colgroup>
+        <thead>
+         <tr>
+          <th class="tableblock halign-left valign-top">Parameter</th>
+          <th class="tableblock halign-left valign-top">Description</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Exclude this type from copyrights</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">If checked, all files defined by this ContentType will be automatically excluded by the wizard and will not have a copyright header. All other fields are then disabled.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">First line</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Format of the first line of the comment header. Typically this line contains no text and is composed of characters to draw a dividing line.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Line prefix</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Format for the beginning of a comment line. This string will be placed by concatenation before all the lines of comment text defined in a text of copyrigt header, including blank lines.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Last line</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Format of the last line of the comment header. Typically this line contains no text and is composed of characters to draw a dividing line.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Line format comment</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Flag indicating if the comment header is in line format (checked) or block format (unchecked). For a comment in line format, it is important to define a valid "Line prefix" for the target language.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Do not override the first line</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Flag indicating whether, when inserting a comment in a file of the selected type, the comment must begin on the first line (unchecked) or on the second line (checked). </p><p class="tableblock">Some languages require an instruction or a comment of a particular format on the first line of a source file. When checked, the content of the first line will be preserved by the wizard.</p></td>
+         </tr>
+         <tr>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">First line pattern</p></td>
+          <td class="tableblock halign-left valign-top"><p class="tableblock">Regular expression pattern to apply on the first line. If the line matches, the comment is inserted after the line, otherwise it is inserted before. This pattern is optional. If it is left empty, the first line is always skipped before to insert the comment header. </p><p class="tableblock">The regular expression must respect the syntax defined by the Pattern java class.</p></td>
+         </tr>
+        </tbody>
+       </table>
+       <div class="paragraph">
+        <p>The labels to the right of the text entry fields indicate the length of the current content of the fields. These labels are particularly useful for long lines and lines containing spaces at the end.</p>
+       </div>
+       <div class="paragraph">
+        <p>The <strong>Clear</strong> button erases completely the format definition of the selected ContentType. It then inherits the format of its parent.</p>
+       </div>
+       <div class="paragraph">
+        <p>The <strong>'Restore Defaults'</strong> button will reload the default formats definitions provided with the plug-in. All custom formats will be lost. By default the plug-in defines formats for 'Text', 'C Source File', 'C Header File' , 'C++ Source File' 'C++ Header File', 'Java Source File' and 'XML' content types, and excludes 'JAR Manifest File', 'ANT buildfile' and all content types defined by PDE and WTP plug-ins.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="sect1">
+    <h2 id="get-in-touch"><a class="anchor" href="#get-in-touch"></a>Get in touch</h2>
+    <div class="sectionbody">
+     <div class="paragraph">
+      <p>Use the <a href="https://github.com/jmini/Eclipse-Copyright-Generator/issues">Eclipse Copyright Generator issue tracker</a> on GitHub.</p>
+     </div>
+     <div class="paragraph">
+      <p>You can also contact me on Twitter: <a href="https://twitter.com/j2r2b">@j2r2b</a></p>
+     </div>
+    </div>
+   </div>
+   <div class="sect1">
+    <h2 id="license"><a class="anchor" href="#license"></a>License</h2>
+    <div class="sectionbody">
+     <div class="paragraph">
+      <p><a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License - v 1.0</a></p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div id="footer">
+   <div id="footer-text">
+     Last updated 2017-12-05 11:30:29 CET
+   </div>
+  </div>
+ </body>
 </html>
