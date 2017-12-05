@@ -1,0 +1,21 @@
+== Project copyright properties page
+
+Copyright settings can be defined at the level of each project too, in the project properties. When defined, those settings are applied by default by the copyright wizard.
+
+To define project settings, open the project properties dialog and select the Copyright category. The properties page displayed contains two tabs.
+
+
+image::guide20.png[]
+
+Copyright settings are disabled by default. To enable, select the *'Enable project specific settings'* checkbox. When enabled, a popup message is displayed proposing to import in the project settings the header formats definitions of the workspace. If you respond No, you will have to define all the header format, including the root Text content type.
+
+
+image::guide21.png[]
+
+When project settings are selected, the two tabs are enabled:
+
+* *Header text*- The first tab allows one to define the header text that will be used by default for all the files in the project on which the wizard will apply a copyright. The same substitution variables that are in workspace preferences can be used here.
+* *Header formats*- The second tab allows one to define the header comment format for all the content types deriving of the root Text type. This tab works exactly as the workspace preferences one.
+
+The project copyright settings are saved in a file stored in the .settings directory of the project. Then this file can be saved in a SCM tool like CVS or Subversion and shared by a team.
+

@@ -1,0 +1,56 @@
+:plus: +
+
+== Headers formats preference page
+
+The Header formats parameters are used to define the applicable format of comment on headers for different types of files.
+The recognition of the type of file is based on the Eclipse ContentType.
+
+The formats apply only on the content in text format.
+If a format is not set on a ContentType, it inherits the format of its parent, and so on recursively until basic type Text.
+
+image::config05.png[]
+
+To define a particular format on a file type, select the correspondent ContentType in the tree, and enter the definition of the format:
+
+[cols="2*", options="header"]
+|===
+
+|Parameter
+|Description
+
+|Exclude this type from copyrights
+|If checked, all files defined by this ContentType will be automatically excluded by the wizard and will not have a copyright header. All other fields are then disabled.
+
+|First line
+|Format of the first line of the comment header. Typically this line contains no text and is composed of characters to draw a dividing line.
+
+|Line prefix
+|Format for the beginning of a comment line. This string will be placed by concatenation before all the lines of comment text defined in a text of copyrigt header, including blank lines.
+
+|Last line
+|Format of the last line of the comment header. Typically this line contains no text and is composed of characters to draw a dividing line.
+
+|Line format comment
+|Flag indicating if the comment header is in line format (checked) or block format (unchecked). For a comment in line format, it is important to define a valid "Line prefix" for the target language.
+
+|Do not override the first line
+|Flag indicating whether, when inserting a comment in a file of the selected type, the comment must begin on the first line (unchecked) or on the second line (checked).
+
+Some languages require an instruction or a comment of a particular format on the first line of a source file.
+When checked, the content of the first line will be preserved by the wizard.
+
+|First line pattern
+|Regular expression pattern to apply on the first line.
+If the line matches, the comment is inserted after the line, otherwise it is inserted before.
+This pattern is optional. If it is left empty, the first line is always skipped before to insert the comment header. 
+
+The regular expression must respect the syntax defined by the Pattern java class.
+|===
+The labels to the right of the text entry fields indicate the length of the current content of the fields. These labels are particularly useful for long lines and lines containing spaces at the end.
+
+The *Clear* button erases completely the format definition of the selected ContentType. It then inherits the format of its parent.
+
+The *'Restore Defaults'* button will reload the default formats definitions provided with the plug-in.
+All custom formats will be lost.
+By default the plug-in defines formats for 'Text', 'C Source File', 'C Header File' , 'C{plus}{plus} Source File' 'C{plus}{plus} Header File', 'Java Source File' and 'XML' content types, and excludes 'JAR Manifest File', 'ANT buildfile' and all content types defined by PDE and WTP plug-ins.
+

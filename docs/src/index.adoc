@@ -1,5 +1,5 @@
 :experimental:
-:github-readme: ../README.adoc
+:github-readme: ../../README.adoc
 
 include::{github-readme}[tags=vardef]
 
@@ -36,32 +36,14 @@ image::install.png[Install New Software windows]
 
 === Usage
 
-==== Project menu
+include::wizard.adoc[leveloffset="+2"]
 
-Open the "menu:Project[Apply copyright...]" menu.
+include::prefs_project.adoc[leveloffset="+2"]
 
-image::menu.png[Apply copyright menu]
+include::prefs_copyright.adoc[leveloffset="+2"]
 
+include::prefs_formats.adoc[leveloffset="+2"]
 
-==== Step 1
-
-In the first step, you select the projects where you want to add the copyright headers.
-
-image::step1.png[Wizard Step 1]
-
-
-==== Step 2
-
-In the second step, you can select the license notice you want to apply.
-
-image::step2.png[Wizard Step 2]
-
-
-==== Step 3
-
-In the third step, you can select precisely which files will be modified.
-
-image::step3.png[Wizard Step 3]
 
 
 include::{github-readme}[tags=contact-section]
