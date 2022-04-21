@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.wdev91.eclipse.copyright.feature_1.5.3.jar" id="com.wdev91.eclipse.copyright.feature" version="1.5.3"/>
+   <feature url="features/com.wdev91.eclipse.copyright.feature_1.6.jar" id="com.wdev91.eclipse.copyright.feature" version="1.6"/>
 </site>

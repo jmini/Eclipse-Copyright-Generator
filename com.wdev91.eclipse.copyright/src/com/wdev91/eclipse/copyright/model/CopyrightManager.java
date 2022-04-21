@@ -232,7 +232,7 @@ public class CopyrightManager {
       String charset = file.getCharset(true);
 
       reader = new BufferedReader(new InputStreamReader(file.getContents(), charset));
-      buffer = new StringWriter(new Long(f.length()).intValue());
+      buffer = new StringWriter(Long.valueOf(f.length()).intValue());
       writer = new PrintWriter(buffer);
 
       // Reads the first line of the file

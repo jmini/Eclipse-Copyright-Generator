@@ -17,6 +17,7 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
+
 	/** The plug-in ID */
   public static final String PLUGIN_ID = "com.wdev91.eclipse.copyright"; //$NON-NLS-1$
 
@@ -27,7 +28,6 @@ public class Activator extends AbstractUIPlugin {
    * The constructor
    */
   public Activator() {
-    plugin = this;
   }
 
   /**
@@ -46,6 +46,7 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
+    plugin = this;
   }
 
   /*
