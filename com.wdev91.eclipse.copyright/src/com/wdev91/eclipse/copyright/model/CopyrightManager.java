@@ -683,17 +683,17 @@ public class CopyrightManager {
           }
         }
       }
+      HeaderFormat format = getHeaderFormat(settings, file, ct);
+      if ( format == null ) {
+        // No format defined for this content type or its parents
+        return false;
+      } else if ( format.isExcluded() ) {
+        // Content type excluded from copyright
+        return false;
+      }
 
       // Checks if the file already have a header
       if ( ! settings.isForceApply() ) {
-        HeaderFormat format = getHeaderFormat(settings, file, ct);
-        if ( format == null ) {
-          // No format defined for this content type or its parents
-          return false;
-        } else if ( format.isExcluded() ) {
-          // Content type excluded from copyright
-          return false;
-        }
         reader = new BufferedReader(new InputStreamReader(file.getContents()));
         String line = reader.readLine();
         if ( line != null && format.skipFirstLine(line) ) {
