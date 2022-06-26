@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.wdev91.eclipse.copyright;singleton:=true
-Bundle-Version: 1.6
+Bundle-Version: 1.6.1
 Bundle-Activator: com.wdev91.eclipse.copyright.Activator
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.ui,
