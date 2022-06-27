@@ -25,6 +25,8 @@ Fork of the link:http://sourceforge.net/projects/eclipsecopyrigh/[Eclipse Copyri
 Initial work by Eric Wuillai.
 Contributors: Jeremie Bresson, Matthew Krupcale.
 
+This new version runs on *Eclipse Version: 2021-12 (4.22.0)*
+
 //end::description[]
 Read more about installation, usage on the link:{homepage}[project home page].
 
