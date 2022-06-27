@@ -2,7 +2,7 @@
 <feature
       id="com.wdev91.eclipse.copyright.feature"
       label="%featureName"
-      version="1.6"
+      version="1.6.1"
       provider-name="%providerName">
 
    <description>
