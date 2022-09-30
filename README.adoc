@@ -23,7 +23,9 @@ Plugin for Eclipse IDE to add and manage copyright headers at the beginning of t
 Fork of the link:http://sourceforge.net/projects/eclipsecopyrigh/[Eclipse Copyright Generator project] on sourceforge.
 
 Initial work by Eric Wuillai.
-Contributors: Jeremie Bresson, Matthew Krupcale.
+Contributors: Jeremie Bresson, Matthew Krupcale, Philippe Krief.
+
+This new version runs on *Eclipse Version: 2021-12 (4.22.0)*
 
 //end::description[]
 Read more about installation, usage on the link:{homepage}[project home page].
