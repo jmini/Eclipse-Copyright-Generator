@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Eric Wuillai - initial API and implementation
+ *     Philippe Krief - updated for Eclipse 4.x
  ******************************************************************************/
 package com.wdev91.eclipse.copyright.actions;
 
@@ -55,7 +56,13 @@ public class ApplyCopyrightOnSelectionHandler extends AbstractHandler {
           addFile(member, resources);
         }
       } catch (CoreException e) {}
-    }
+    } else if ( res instanceof IProject ) {
+        try {
+            for (IResource member : ((IProject) res).members(IFolder.EXCLUDE_DERIVED)) {
+              addFile(member, resources);
+            }
+          } catch (CoreException e) {}
+        }
   }
 
   public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -63,7 +70,7 @@ public class ApplyCopyrightOnSelectionHandler extends AbstractHandler {
     List<IFile> resources = new ArrayList<IFile>();
     IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getActiveMenuSelection(event);
     for (Object sel : selection.toArray()) {
-      if ( sel instanceof IFile || sel instanceof IFolder ) {
+      if ( sel instanceof IFile || sel instanceof IFolder || sel instanceof IProject ) {
         addFile((IResource) sel, resources);
       } else {
         Object ao = null;
@@ -120,7 +127,7 @@ public class ApplyCopyrightOnSelectionHandler extends AbstractHandler {
     try {
       Method m = obj.getClass().getMethod("getResource"); //$NON-NLS-1$
       Object res = m.invoke(obj);
-      if ( res instanceof IFile || res instanceof IFolder ) {
+      if ( res instanceof IFile || res instanceof IFolder || res instanceof IProject ) {
         return (IResource) res;
       }
     } catch (Exception e) {

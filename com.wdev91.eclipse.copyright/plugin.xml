@@ -2,23 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            description="%actionset_descr"
-            id="com.wdev91.eclipse.copyright.actionSet"
-            label="%actionset_label"
-            visible="true">
-         <action
-               class="com.wdev91.eclipse.copyright.actions.ApplyCopyrightAction"
-               icon="icons/copyright.gif"
-               id="com.wdev91.eclipse.copyright.ApplyCopyrightAction"
-               label="%actionApply_label"
-               menubarPath="project/additions"
-               tooltip="%actionApply_tooltip">
-         </action>
-      </actionSet>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.eclipse.ui.preferencePages.Workbench"
@@ -73,25 +56,6 @@
          <command
                commandId="com.wdev91.eclipse.copyright.ApplyCopyrightCommand"
                style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <and>
-                        <adapt
-                              type="org.eclipse.core.resources.IResource">
-                        </adapt>
-                        <not>
-                           <adapt
-                                 type="org.eclipse.core.resources.IProject">
-                           </adapt>
-                        </not>
-                     </and>
-                  </iterate>
-               </with>
-            </visibleWhen>
          </command>
       </menuContribution>
    </extension>
